@@ -1,9 +1,27 @@
 (ns app.components.navbar.core
-  (:require [app.components.navbar.model :as model]))
+  (:require [re-frame.core :as rf]
+            [garden.core   :as garden]
 
-(defn view []
-  [:nav
-   (map-indexed
-    (fn [idx link] ^{:key idx}
-      [:a link (:title link)])
-    model/links)])
+            [app.helpers :as h]))
+(def styles
+  (garden/css
+   (list
+    [:nav {:width          "100%"
+           :position       "fixed"
+           :z-index        "2"
+           :background     "white"
+           :font-weight    "bold"
+           :padding        "24px"
+           :letter-spacing "0.025em"}])))
+
+(defn component []
+  (let [*sidebar? (rf/subscribe [::h/expands :sidebar])]
+    (fn []
+      (let [sidebar? @*sidebar?]
+        [:nav.between [:style styles]
+         [:button {:on-click #(rf/dispatch [::h/expands :sidebar])}
+          "Меню"]
+         [:div
+          [:button "Уведобления"]
+          [:button "Корзина"]
+          [:button "Аккаунт"]]]))))

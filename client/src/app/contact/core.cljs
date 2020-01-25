@@ -5,4 +5,4 @@
 (page/reg-page
  model/index-page
  (fn []
-   [:div "Contact"]))
+   [:h1 "Контакты"]))

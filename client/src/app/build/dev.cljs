@@ -4,6 +4,6 @@
             [devtools.core :as devtools]))
 
 (devtools/install!)
-(frisk/enable-re-frisk! {:width "400px" :height "500px" :x 0 :y 0})
+(frisk/enable-re-frisk! {:width "400px" :height "500px"})
 
 (core/mount-root)

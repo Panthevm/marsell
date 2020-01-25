@@ -1,4 +1,4 @@
-(ns app.components.navbar.model)
+(ns app.components.sidebar.model)
 
 (def links
   [{:href "#/home"    :title "Главная"}

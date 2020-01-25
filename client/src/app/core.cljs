@@ -5,12 +5,14 @@
             [frames.routing :as routing]
 
             [app.routes     :as routes]
+            [app.styles     :as styles]
             [app.pages      :as pages]
 
             [app.home.core]
             [app.contact.core]
 
-            [app.components.navbar.core :as navbar]))
+            [app.components.navbar.core  :as navbar]
+            [app.components.sidebar.core :as sidebar]))
 
 (rf/reg-event-fx
  ::initialize
@@ -19,16 +21,18 @@
     ::routing/init routes/routes}))
 
 (defn content [page]
-  (if page
-    [page]
-    [:div "Страница не найдена"]))
+  [:div.container.content
+   (if page
+     [page]
+     [:div "Страница не найдена"])])
 
 (defn current-page []
   (let [route (rf/subscribe [::routing/current])]
     (fn []
       (let [page (->> @route :match (get @pages/pages))]
-        [:<>
-         [navbar/view]
+        [:<> [:style styles/app]
+         [navbar/component]
+         [sidebar/component]
          [content page]]))))
 
 (defn mount-root []
