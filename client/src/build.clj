@@ -4,9 +4,9 @@
 (def source-dir "src")
 
 (def compiler-config
-  {:output-to     "resources/public/js/app.js"
-   :source-map    "resources/public/js/app.js.map"
-   :output-dir    "resources/public/js/out"
+  {:output-to     "build/js/app.js"
+   :source-map    "build/js/app.js.map"
+   :output-dir    "build/js/out"
    :optimizations :advanced
    :main          'app.build.prod
    :externs       []})
