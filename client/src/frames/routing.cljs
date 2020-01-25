@@ -10,16 +10,23 @@
       (->> (mapv keyword))
       not-empty))
 
-(defn current-fragment []
+(defn parse-fragment [routes]
   (let [location (.. js/window -location -hash)
         path     (-> location location->path (into [:-]))]
-    {:path     path}))
+    {:path  path
+     :match (get-in routes path)}))
 
 (rf/reg-event-fx
  ::location-changed
  (fn [{db :db} [_ routes]]
-   (let [{:keys [path]} (current-fragment)]
-     {:db (assoc db :routing {:match (get-in routes path)})})))
+   (let [{:keys [path match] :as current} (parse-fragment routes)
+         old-match (get-in db [:routing :match])
+         page-hook (cond
+                     (nil? old-match)       [[match :mount]]
+                     (not= old-match match) [[old-match :unmount]
+                                             [match     :mount]])]
+     {:db         (assoc db :routing current)
+      :dispatch-n page-hook})))
 
 (rf/reg-fx
  ::init

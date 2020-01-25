@@ -8,6 +8,7 @@
             [app.pages      :as pages]
 
             [app.home.core]
+            [app.contact.core]
 
             [app.components.navbar.core :as navbar]))
 
