@@ -2,3 +2,8 @@ client/resources/public/js
 client/.cpcache
 client/.nrepl-port
 client/build
+
+server/.cpcache
+pgdata/
+server/.cpcache
+server/.nrepl-port
