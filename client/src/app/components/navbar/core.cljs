@@ -22,6 +22,6 @@
          [:button {:on-click #(rf/dispatch [::h/expands :sidebar])}
           "Меню"]
          [:div
-          [:button "Уведобления"]
+          [:button "Уведомления"]
           [:button "Корзина"]
           [:button "Аккаунт"]]]))))
