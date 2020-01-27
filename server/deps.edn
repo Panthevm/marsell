@@ -1,7 +1,9 @@
 {:paths ["src"]
- :deps  {org.clojure/clojure       {:mvn/version "RELEASE"}
-         org.clojure/java.jdbc     {:mvn/version "RELEASE"}
-         org.postgresql/postgresql {:mvn/version "RELEASE"}}
+ :deps  {org.clojure/clojure {:mvn/version "RELEASE"}
+         metosin/reitit-ring {:mvn/version "RELEASE"}
+         org.immutant/web    {:mvn/version "RELEASE"}
+         ring/ring-codec     {:mvn/version "RELEASE"}
+         clj-pg              {:mvn/version "RELEASE"}}
  :aliases
  {:nrepl {:extra-deps {cider/cider-nrepl {:mvn/version "RELEASE"}}
           :main-opts  ["-m" "nrepl.cmdline"

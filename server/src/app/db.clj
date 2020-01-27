@@ -1,6 +1,17 @@
 (ns app.db
-  (:require [clojure.java.jdbc :as jdbc]))
+  (:require [clj-pg.pool :as pool]
+            [clj-pg.honey :as pg]))
 
-(def db {:dbtype "postgresql"
-         :dbname "marsell"
-         :host   "localhost"})
+(def database-url "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified")
+
+(defonce ds (atom nil))
+
+(defn connect []
+  (if-let [p @ds]
+    p
+    (reset! ds
+            {:datasource (pool/create-pool {:idle-timeout        10000
+                                            :minimum-idle        1
+                                            :maximum-pool-size   3
+                                            :connection-init-sql "select 1"
+                                            :data-source.url     database-url})})))

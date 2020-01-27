@@ -1,22 +1,14 @@
 (ns app.actions
-  (:require [clojure.java.jdbc :as jdbc]
-            [app.db :as db]))
+  (:require [clj-pg.honey  :as pg]
+            [honeysql.core :as hsql]))
 
-(defn create-table
-  [{:keys [name columns]}]
-  (jdbc/db-do-commands db/db
-                       (jdbc/create-table-ddl name columns)))
+(defn -exists? [db table] (pg/table-exists? db table))
+(defn -create  [db table] (pg/create-table  db table))
+(defn -drop    [db table] (pg/drop-table    db table))
 
-(defn insert
-  [table-name data]
-  (jdbc/insert! db/db table-name data))
-
-(defn query
-  [sql]
-  (jdbc/query db/db [sql]))
-
-
-(defn drop-table
-  [table-name]
-  (jdbc/db-do-commands db/db
-                       (str "DROP TABLE" (name table-name))))
+(defn -get [table {db :db params :params}]
+  (let [q (:ilike params)]
+    {:staus 200
+     :body (pg/query db
+                     (merge {:select [:*] :from [table]}
+                            (when q {:where [:ilike (hsql/raw "resource::text") (str \% q \%)]})))}))
