@@ -3,7 +3,7 @@
             [clojure.walk    :as walk]
             [cheshire.core :as json]))
 
-(defn add-db [db handler]
+(defn add-db [handler db]
   (fn [req]
     (handler (assoc req :db db))))
 
@@ -27,3 +27,15 @@
                 walk/keywordize-keys)]
         (handler (update req :params merge params)))
       (handler req))))
+
+(defn wrap-cors
+  ([handler]
+   (wrap-cors handler "*"))
+  ([handler allowed-origins]
+   (fn [request]
+     (-> (handler request)
+                                        ; Pass the request on, but make sure we add this header for CORS support
+         (assoc-in [:headers "Access-Control-Allow-Origin"] allowed-origins)
+         (assoc-in [:headers "Access-Control-Allow-Methods"] "GET,POST,DELETE")
+         (assoc-in [:headers "Access-Control-Allow-Headers"]
+                   "X-Requested-With,Content-Type,Cache-Control,Origin,Accept,Authorization")))))

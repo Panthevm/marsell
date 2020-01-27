@@ -1,8 +1,9 @@
 (ns ^:figwheel-hooks app.core
-  (:require [reagent.core   :as reagent]
-            [re-frame.core  :as rf]
+  (:require [frames.fetch]
+            [reagent.core   :as reagent]
 
-            [frames.routing :as routing]
+            [re-frame.core  :as rf]
+            [frames.routing]
 
             [app.routes     :as routes]
             [app.styles     :as styles]
@@ -16,9 +17,8 @@
 
 (rf/reg-event-fx
  ::initialize
- (fn [db]
-   {:db db
-    ::routing/init routes/routes}))
+ (fn []
+   {::frames.routing/init routes/routes}))
 
 (defn content [page]
   [:div.container.content
@@ -27,7 +27,7 @@
      [:div "Страница не найдена"])])
 
 (defn current-page []
-  (let [route (rf/subscribe [::routing/current])]
+  (let [route (rf/subscribe [:frames.routing/current])]
     (fn []
       (let [page (->> @route :match (get @pages/pages))]
         [:<> [:style styles/app]
@@ -36,6 +36,7 @@
          [content page]]))))
 
 (defn mount-root []
+  (rf/clear-subscription-cache!)
   (rf/dispatch-sync [::initialize])
   (reagent/render [current-page] (.getElementById js/document "app")))
 

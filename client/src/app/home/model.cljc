@@ -5,6 +5,19 @@
 
 (rf/reg-event-fx
  index-page
- (fn [{db :db} [_ hook params]]
-   (prn "home "hook)
-   {:db db}))
+ (fn [_ [_ hook]]
+   (case hook
+     :mount {:fetch {:uri     "/info"
+                     :method  "get"
+                     :success {:event ::success}}}
+     nil)))
+
+(rf/reg-event-db
+ ::success
+ (fn [db [_ data]]
+   (assoc db :data data)))
+
+(rf/reg-sub
+ index-page
+ (fn [db]
+   {:data (:data db)}))
