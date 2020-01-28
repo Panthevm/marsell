@@ -6,5 +6,4 @@
 (rf/reg-event-fx
  index-page
  (fn [{db :db} [_ hook params]]
-   (prn "contact " hook)
    {:db db}))

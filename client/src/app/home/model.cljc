@@ -6,10 +6,10 @@
 (rf/reg-event-fx
  index-page
  (fn [_ [_ hook]]
-   (case hook
-     :mount {:fetch {:uri     "/info"
-                     :method  "get"
-                     :success {:event ::success}}}
+   (condp = hook
+     :mount {:json/fetch {:uri     "/info"
+                          :method  "get"
+                          :success {:event ::success}}}
      nil)))
 
 (rf/reg-event-db

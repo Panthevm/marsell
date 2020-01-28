@@ -1,8 +1,8 @@
 (ns ^:figwheel-hooks app.core
-  (:require [frames.fetch]
-            [reagent.core   :as reagent]
-
+  (:require [reagent.core   :as reagent]
             [re-frame.core  :as rf]
+
+            [frames.xhr]
             [frames.routing]
 
             [app.routes     :as routes]
@@ -15,10 +15,11 @@
             [app.components.navbar.core  :as navbar]
             [app.components.sidebar.core :as sidebar]))
 
+
 (rf/reg-event-fx
  ::initialize
  (fn []
-   {::frames.routing/init routes/routes}))
+   {:frames.routing/init routes/routes}))
 
 (defn content [page]
   [:div.container.content
@@ -35,9 +36,8 @@
          [sidebar/component]
          [content page]]))))
 
-(defn mount-root []
-  (rf/clear-subscription-cache!)
+(defn ^:export mount-root []
   (rf/dispatch-sync [::initialize])
-  (reagent/render [current-page] (.getElementById js/document "app")))
+  (reagent/render [current-page] (js/document.getElementById "app")))
 
 (defn ^:after-load re-render [] (mount-root))

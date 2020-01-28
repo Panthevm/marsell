@@ -24,7 +24,8 @@
          page-hook (cond
                      (nil? old-match)       [[match :mount]]
                      (not= old-match match) [[old-match :unmount]
-                                             [match     :mount]])]
+                                             [match     :mount]]
+                     :else [[match :unmount] [match :mount]])]
      {:db         (assoc db :routing current)
       :dispatch-n page-hook})))
 

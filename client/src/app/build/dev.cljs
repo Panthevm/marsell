@@ -5,5 +5,4 @@
 
 (devtools/install!)
 (frisk/enable-re-frisk! {:width "400px" :height "500px"})
-
 (core/mount-root)
