@@ -15,7 +15,6 @@
             [app.components.navbar.core  :as navbar]
             [app.components.sidebar.core :as sidebar]))
 
-
 (rf/reg-event-fx
  ::initialize
  (fn []

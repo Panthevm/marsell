@@ -9,7 +9,7 @@
   (styles/style
    [:.expand {:left "-250px"}]
    [:aside   {:position   "fixed"
-              :margin-top "80px"
+              :margin-top "72px"
               :left       "0"
               :width      "250px"
               :background "white"

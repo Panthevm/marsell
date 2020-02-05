@@ -7,6 +7,8 @@
   (fn [req]
     (handler (assoc req :db db))))
 
+(def ti "pidor")
+
 (defn format-edn [handler]
   (fn [req]
     (let [body* (when-let [b* (and (:body req) (not-empty (slurp (:body req))))]

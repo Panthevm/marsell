@@ -6,8 +6,8 @@
 (def styles
   (garden/css
    (list
-    [:nav {:width          "100%"
-           :position       "fixed"
+    [:nav {:position       "fixed"
+           :width          "100%"
            :z-index        "2"
            :background     "white"
            :font-weight    "bold"

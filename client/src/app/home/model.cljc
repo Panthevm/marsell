@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]))
 
 (def index-page ::index)
+(def show-page  ::show)
 
 (rf/reg-event-fx
  index-page
@@ -11,6 +12,12 @@
                           :method  "get"
                           :success {:event ::success}}}
      nil)))
+
+
+(rf/reg-event-fx
+ show-page
+ (fn [_ [_ & hook]]
+   (prn "jook" hook)))
 
 (rf/reg-event-db
  ::success
