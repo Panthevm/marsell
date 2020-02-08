@@ -1,6 +1,8 @@
 (ns app.db
-  (:require [clj-pg.pool :as pool]
-            [clj-pg.honey :as pg]))
+  (:require
+   [clj-pg.honey :as pg]
+   [clojure.java.jdbc :as jdbc]
+   [clj-pg.pool :as pool]))
 
 (def database-url "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified")
 

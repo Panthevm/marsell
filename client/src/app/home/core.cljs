@@ -1,15 +1,26 @@
 (ns app.home.core
   (:require [re-frame.core  :as rf]
             [app.pages      :as page]
-            [app.home.model :as model]))
+            [app.home.model :as model]
+            [app.components.menu.core :as menu]
+            [app.components.breadcrumbs.core :as breadcrumbs]))
 
 (page/reg-page
  model/index-page
  (let [page (rf/subscribe [::model/index])]
    (fn []
-     [:div
-      [:h1 "Главная страница"]
-      (map-indexed
-       (fn [idx item] ^{:key idx}
-         [:div {:style {:padding-left "300px"}} (:name item)])
-       (:data @page))])))
+     [:div.columns
+      [:div.column.col-2.col-lg-12
+       [menu/component]]
+      [:div.column
+       [breadcrumbs/component]
+       [:h1.mt-2 "Главная страница"]
+       [:div.columns
+        (map-indexed
+         (fn [idx item] ^{:key idx}
+           [:div.column.col-4..col-lg-12.mb-2
+            [:div.card.c-hand
+             [:div.card-header (:name item)
+              [:div.card-subtitle.text-gray "Type"]]
+             ]])
+         (concat (:data @page) (:data @page) (:data @page)))]]])))

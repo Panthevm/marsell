@@ -12,8 +12,7 @@
             [app.home.core]
             [app.contact.core]
 
-            [app.components.navbar.core  :as navbar]
-            [app.components.sidebar.core :as sidebar]))
+            [app.components.navbar.core  :as navbar]))
 
 (rf/reg-event-fx
  ::initialize
@@ -21,7 +20,7 @@
    {:frames.routing/init routes/routes}))
 
 (defn content [page]
-  [:div.container.content
+  [:div.container.bg-gray
    (if page
      [page]
      [:div "Страница не найдена"])])
@@ -32,7 +31,6 @@
       (let [page (->> @route :match (get @pages/pages))]
         [:<> [:style styles/app]
          [navbar/component]
-         [sidebar/component]
          [content page]]))))
 
 (defn ^:export mount-root []

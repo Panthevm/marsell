@@ -7,8 +7,6 @@
   (fn [req]
     (handler (assoc req :db db))))
 
-(def ti "pidor")
-
 (defn format-edn [handler]
   (fn [req]
     (let [body* (when-let [b* (and (:body req) (not-empty (slurp (:body req))))]
@@ -30,14 +28,9 @@
         (handler (update req :params merge params)))
       (handler req))))
 
-(defn wrap-cors
-  ([handler]
-   (wrap-cors handler "*"))
-  ([handler allowed-origins]
-   (fn [request]
-     (-> (handler request)
-                                        ; Pass the request on, but make sure we add this header for CORS support
-         (assoc-in [:headers "Access-Control-Allow-Origin"] allowed-origins)
-         (assoc-in [:headers "Access-Control-Allow-Methods"] "GET,POST,DELETE")
-         (assoc-in [:headers "Access-Control-Allow-Headers"]
-                   "X-Requested-With,Content-Type,Cache-Control,Origin,Accept,Authorization")))))
+(defn wrap-cors [handler]
+  (fn [request]
+    (-> (handler request)
+        (assoc-in [:headers "Access-Control-Allow-Origin"]  "*")
+        (assoc-in [:headers "Access-Control-Allow-Methods"] "GET,POST,DELETE")
+        (assoc-in [:headers "Access-Control-Allow-Headers"] "X-Requested-With,Content-Type,Cache-Control,Origin,Accept,Authorization"))))
