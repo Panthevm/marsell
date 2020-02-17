@@ -3,4 +3,4 @@
 (def table
   {:table   :categories
    :columns {:id   {:type "SERIAL PRIMARY KEY"}
-             :name {:type "CHARVAR(255)"}}})
+             :name {:type "VARCHAR(255)"}}})

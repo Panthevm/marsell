@@ -10,7 +10,6 @@
             [app.pages      :as pages]
 
             [app.home.core]
-            [app.contact.core]
 
             [app.components.navbar.core  :as navbar]))
 
@@ -20,10 +19,9 @@
    {:frames.routing/init routes/routes}))
 
 (defn content [page]
-  [:div.container.bg-gray
-   (if page
-     [page]
-     [:div "Страница не найдена"])])
+  (if page
+    [page]
+    [:div "Страница не найдена"]))
 
 (defn current-page []
   (let [route (rf/subscribe [:frames.routing/current])]

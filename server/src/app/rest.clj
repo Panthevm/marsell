@@ -15,3 +15,5 @@
                   middleware/wrap-cors)]
     (migration/migration db)
     (web/run stack)))
+
+:q
