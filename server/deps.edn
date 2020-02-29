@@ -3,8 +3,7 @@
          metosin/reitit-ring    {:mvn/version "RELEASE"}
          org.immutant/web       {:mvn/version "RELEASE"}
          ring/ring-codec        {:mvn/version "RELEASE"}
-         clj-pg                 {:mvn/version "RELEASE"}
-         ragtime                {:mvn/version "0.8.0"}}
+         clj-pg                 {:mvn/version "RELEASE"}}
  :aliases
  {:nrepl {:extra-deps {cider/cider-nrepl {:mvn/version "RELEASE"}}
           :main-opts  ["-m" "nrepl.cmdline"

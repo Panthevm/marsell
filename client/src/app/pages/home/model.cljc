@@ -1,4 +1,4 @@
-(ns app.home.model
+(ns app.pages.home.model
   (:require [re-frame.core :as rf]))
 
 (def index-page ::index)
@@ -8,7 +8,7 @@
  index-page
  (fn [_ [_ hook]]
    (condp = hook
-     :mount {:json/fetch {:uri     "/info"
+     :mount {:json/fetch {:uri     "/categories"
                           :method  "get"
                           :success {:event ::success}}}
      nil)))

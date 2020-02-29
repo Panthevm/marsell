@@ -1,7 +1,6 @@
 (ns app.routes)
 
 (def routes
-  {:.       :app.home.model/index
-   "home"    {:.    :app.home.model/index
-              [:id] {:. :app.home.model/show}}
-   "catalog" {:. :app.contact.model/index}})
+  {:.       :app.pages.home.model/index
+   "home"    {:.    :app.pages.home.model/index
+              [:id] {:. :app.pages.home.model/show}}})

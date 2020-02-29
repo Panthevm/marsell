@@ -2,13 +2,25 @@
   (:require [clj-pg.honey  :as pg]
             [honeysql.core :as hsql]))
 
-(defn -exists? [db table] (pg/table-exists? db table))
-(defn -create  [db table] (pg/create-table  db table))
-(defn -drop    [db table] (pg/drop-table    db table))
-
-(defn -get [table {db :db params :params}]
+(defn -get [table {:keys [db params]}]
   (let [q (:ilike params)]
     {:staus 200
-     :body (pg/query db
-                     (merge {:select [:*] :from [table]}
-                            (when q {:where [:ilike (hsql/raw "resource::text") (str \% q \%)]})))}))
+     :body  (pg/query db
+                      (merge {:select [:*] :from [(:table table)]}
+                             (when q
+                               {:where [:ilike (hsql/raw "resource::text") (str \% q \%)]})))}))
+
+
+(defn -post [table {:keys [db body]}]
+  (let [insert   (pg/create db table {:resource body})
+        response (pg/update db table
+                            (update insert :resource assoc
+                                    :resourceType  (-> table :table name)
+                                    :id            (:id insert)))]
+    {:status 201
+     :body   response}))
+
+(defn -delete [table {:keys [db params]}]
+  (let [response (pg/delete db table (:id params))]
+    {:status 200
+     :body   response}))

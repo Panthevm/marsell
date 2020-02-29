@@ -21,11 +21,9 @@
 (defn parse-params [handler]
   (fn [req]
     (if-let [qs (:query-string req)]
-      (let [params
-            (-> qs
-                codec/form-decode
-                walk/keywordize-keys)]
-        (handler (update req :params merge params)))
+      (let [params (-> qs codec/form-decode walk/keywordize-keys)]
+        (handler (update req :params
+                         merge params)))
       (handler req))))
 
 (defn wrap-cors [handler]

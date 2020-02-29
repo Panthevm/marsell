@@ -10,7 +10,6 @@
    [:nav {:position        "relative"
           :padding         "1rem"}]
    [:a {:padding "25px"
-        :cursor  "pointer"
         :color   style/color-2}
     [:&:hover {:color "black"}]]))
 

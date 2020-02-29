@@ -1,8 +1,8 @@
-(ns app.home.core
-  (:require [re-frame.core  :as rf]
-            [app.pages      :as page]
-            [app.home.model :as model]
-            [app.components.menu.core :as menu]
+(ns app.pages.home.core
+  (:require [re-frame.core        :as rf]
+            [app.pages.model      :as page]
+            [app.pages.home.model :as model]
+            [app.components.menu.core        :as menu]
             [app.components.breadcrumbs.core :as breadcrumbs]))
 
 (page/reg-page

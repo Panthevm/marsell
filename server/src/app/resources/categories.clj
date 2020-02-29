@@ -2,5 +2,5 @@
 
 (def table
   {:table   :categories
-   :columns {:id   {:type "SERIAL PRIMARY KEY"}
-             :name {:type "VARCHAR(255)"}}})
+   :columns {:id       {:type :serial :primary true :weighti 0}
+             :resource {:type :jsonb}}})

@@ -6,8 +6,9 @@
             [app.middleware :as middleware]
             [app.handler    :as handler]))
 
+
 (defn -main [& {:as args}]
-  (let [db (db/connect)
+  (let [db    (db/connect)
         stack (-> #'handler/handler
                   (middleware/add-db db)
                   middleware/format-edn
@@ -16,4 +17,5 @@
     (migration/migration db)
     (web/run stack)))
 
-:q
+(comment
+  (web/stop))

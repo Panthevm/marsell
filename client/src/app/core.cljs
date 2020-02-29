@@ -7,9 +7,9 @@
 
             [app.routes     :as routes]
             [app.styles     :as styles]
-            [app.pages      :as pages]
 
-            [app.home.core]
+            [app.pages.model      :as pages]
+            [app.pages.home.core]
 
             [app.components.navbar.core  :as navbar]))
 
