@@ -9,8 +9,7 @@
   (style/css
    [:nav {:position        "relative"
           :padding         "1rem"}]
-   [:a {:padding "25px"
-        :color   style/color-2}
+   [:a {:color   style/color-2}
     [:&:hover {:color "black"}]]))
 
 (defn component []
@@ -23,10 +22,10 @@
           [:section.navbar-section
            (map-indexed
             (fn [idx link] ^{:key idx}
-              [:a link
+              [:a.pr-2 link
                [:b (:title link)]])
             (:nav node))]
           [:section
-           [:a "Список желаемого	"]
-           [:span "/"]
-           [:a "Вход"]]]]))))
+           [:span.pointer.pr "Список желаемого	"]
+           [:span.muted.pr-1 "/"]
+           [:span.pointer "Вход"]]]]))))

@@ -28,3 +28,11 @@
  index-page
  (fn [db]
    {:data (:data db)}))
+
+(rf/reg-event-fx
+ ::post
+ (fn []
+   {:json/fetch {:uri "/categories"
+                 :method "post"
+                 :body {:resourceType "Categories"
+                        :name "Name"}}}))

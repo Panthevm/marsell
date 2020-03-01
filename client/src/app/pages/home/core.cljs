@@ -15,6 +15,7 @@
       [:div.column
        [breadcrumbs/component]
        [:h1.mt-2 "Главная страница"]
+       [:button {:on-click #(rf/dispatch [::model/post])} "@@@@@"]
        [:div.columns
         (map-indexed
          (fn [idx item] ^{:key idx}

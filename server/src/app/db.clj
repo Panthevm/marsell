@@ -1,5 +1,7 @@
 (ns app.db
-  (:require [clj-pg.pool :as pool]))
+  (:require [clj-pg.pool :as pool]
+            (app.resources
+             [categories :as categories])))
 
 (def database-url "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified")
 
