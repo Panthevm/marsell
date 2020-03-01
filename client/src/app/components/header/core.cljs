@@ -2,9 +2,9 @@
 
 (defn component []
   [:div.container.row.center.border-bottom
-   [:section.col
+   [:section
     [:div.row.center
-     [:h1.brand.pr-1 "MARSELL"]
+     [:h1.space "MARSELL"]
      [:div
       [:small.block.muted "МАГАЗИН"]
       [:small.block.muted "ДЕТСКОЙ МЕБЕЛИ"]]]]
@@ -16,6 +16,6 @@
     [:img.icon.pointer {:src "../icons/phone.svg"}]
     [:img.icon.pointer {:src "../icons/basket.svg"}]
     [:div.row.pointer
-     [:div.pt.pr-1
+     [:div.pt.space
       [:span.muted "0 шт. - "] [:b "0.00 "]]
      [:img.small-icon.self-center.muted {:src "../icons/arrow-down.svg"}]]]])

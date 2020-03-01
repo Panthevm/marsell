@@ -8,9 +8,9 @@
 (def styles
   (style/css
    [:nav {:position        "relative"
-          :padding         "1rem"}]
-   [:a {:color   style/color-2}
-    [:&:hover {:color "black"}]]))
+          :padding         "1rem"}
+    [:a {:color   style/color-2}
+     [:&:hover {:color "black"}]]]))
 
 (defn component []
   (let [*node (rf/subscribe [::model/data])]
@@ -19,13 +19,13 @@
         [:<>
          [header/component]
          [:nav.container.between.center.row [:style styles]
-          [:section.navbar-section
+          [:section.navbar-section.row
            (map-indexed
             (fn [idx link] ^{:key idx}
-              [:a.pr-2 link
-               [:b (:title link)]])
+              [:section
+               [:a link [:b (:title link)]]])
             (:nav node))]
           [:section
            [:span.pointer.pr "Список желаемого	"]
-           [:span.muted.pr-1 "/"]
+           [:span.muted.space "/"]
            [:span.pointer "Вход"]]]]))))

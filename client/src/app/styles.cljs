@@ -10,6 +10,7 @@
 
 (def color-1 "#e2f5fc")
 (def color-2 "#999999")
+(def color-3 "#f0f0f0")
 
 (def font {:regular "GothamPro"
            :bold    "GothamPro-Bold"
@@ -17,10 +18,10 @@
 
 (def typography
   (list
-   [:h1 :b {:font-family (:bold font) :font-weight "normal"}]
+   [:h1 :b {:font-family (:bold font) :font-weight "900"}]
+   [:h3    {:font-family (:bold font) :font-weight "400"}]
    [:small {:font-family (:light font)}]
-   [:.brand {:font-weight "900"}]
-   [:a {:text-decoration "none"}]
+   [:a     {:text-decoration "none"}]
 
    [:small {:font-size ".7rem"}]
    [:h1    {:font-size "42px"}]
@@ -34,16 +35,19 @@
    (media {:min-width "992px"}  [:.container {:max-width "960px"}])
    (media {:min-width "1200px"} [:.container {:max-width "1140px"}])
    [:.row {:display   "flex"
-           :flex-wrap "wrap"}]
+           ;:flex-wrap "wrap"
+           }]
    [:.col {:flex-basis "0"
            :flex-grow  "1"
+           :padding-right "1rem"
+           :padding-left "1rem"
            :max-width  "100%"}]
+   [:section {:padding-right "25px"}]
    [:.container {:width        "100%"
                  :margin-right "auto"
                  :margin-left  "auto"}]
 
-   [:.pr-2 {:padding-right "25px"}]
-   [:.pr-1 {:padding-right "5px"}]
+   [:.space {:padding-right "5px"}]
    [:.pt {:padding-top "5px"}]
    [:.block   {:display "block"}]
 
@@ -76,6 +80,14 @@
              :border-bottom "1px solid #ccc"}
      [:&:focus {:border-bottom "1px solid #333"}]]]))
 
+(def components
+  (list
+   [:.banner {:height     "13.75rem"
+              :display    "block"
+              :position   "relative"
+              :background color-3}
+    [:.caption {:position "absolute"}]]))
+
 (def app
   (garden/css
    (concat
@@ -83,6 +95,7 @@
     positioning
     icons
     form
+    components
     (list
      [:body       {:margin      "0"
                    :font-size   "1rem"
