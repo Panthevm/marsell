@@ -1,5 +1,5 @@
 (ns ^:figwheel-hooks app.core
-  (:require [reagent.core   :as reagent]
+  (:require [reagent.dom :as dom]
             [re-frame.core  :as rf]
 
             [frames.xhr]
@@ -33,6 +33,6 @@
 
 (defn ^:export mount-root []
   (rf/dispatch-sync [::initialize])
-  (reagent/render [current-page] (js/document.getElementById "app")))
+  (dom/render [current-page] (js/document.getElementById "app")))
 
 (defn ^:after-load re-render [] (mount-root))
