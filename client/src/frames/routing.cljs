@@ -1,21 +1,43 @@
 (ns frames.routing
   (:require [re-frame.core  :as rf]
-            [clojure.string :as str]
-            [route-map.core    :as route-map]))
+            [clojure.string :as str]))
+
+
+(defn pathify [path]
+  (filterv not-empty
+           (str/split (str/replace path #"^#" "")
+                      #"/")))
+
+(defn params-node [node]
+  (-> vector?
+      (comp first)
+      (filter node)
+      first))
+
+(defn match [routes path]
+  (loop [node              routes
+         [current & other] path
+         params            {}]
+    (if current
+      (if-let [node (get node current)]
+        (recur node other params)
+        (let [[[k] node] (params-node node)]
+          (recur node other (assoc params k current))))
+      {:match (:. node) :params params})))
 
 (defn parse-fragment [routes]
   (let [location (.. js/window -location -hash)
-        path     (-> location (str/replace #"^#" ""))
-        route    (route-map/match [:. path] routes)]
+        path     (pathify location)
+        route    (match routes path)]
     {:path   path
      :params (:params route)
-     :match  (:match route)}))
+     :match  (or (:match route) :.)}))
 
 (rf/reg-event-fx
  ::location-changed
  (fn [{db :db} [_ routes]]
    (let [{:keys [match params] :as current} (parse-fragment routes)
-         {old-match :match old-params :param} (:routing db)
+         {old-match :match old-params :params} (:routing db)
          page-hook (cond
                      (nil? old-match)       [[match :mount]]
                      (not= old-match match) [[old-match :unmount old-params]
