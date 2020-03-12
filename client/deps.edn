@@ -10,6 +10,10 @@
    :extra-deps  {re-frisk                  {:mvn/version "0.5.4"}
                  binaryage/devtools        {:mvn/version "0.9.10"}
                  com.bhauman/figwheel-main {:mvn/version "0.2.3"}}}
+
+  :prod
+  {:main-opts ["-m cljs.main -co prod.cljs.edn -c app.core"]}
+
   :nrepl
   {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.3"}
                 cider/piggieback  {:mvn/version "0.4.0"}}
