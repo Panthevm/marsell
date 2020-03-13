@@ -6,7 +6,6 @@
             [frames.routing]
 
             [app.routes     :as routes]
-            [app.styles     :as styles]
 
             [app.pages.model      :as pages]
             [app.pages.home.core]
@@ -27,7 +26,7 @@
   (let [route (rf/subscribe [:frames.routing/current])]
     (fn []
       (let [page (->> @route :match (get @pages/pages))]
-        [:<> [:style styles/app]
+        [:<>
          [navbar/component]
          [content page]]))))
 

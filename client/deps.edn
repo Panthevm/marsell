@@ -1,8 +1,7 @@
 {:paths ["src" "resources"]
  :deps  {org.clojure/clojurescript {:mvn/version "RELEASE"}
          reagent                   {:mvn/version "RELEASE"}
-         re-frame                  {:mvn/version "RELEASE"}
-         garden                    {:mvn/version "RELEASE"}}
+         re-frame                  {:mvn/version "RELEASE"}}
 
  :aliases
  {:dev
@@ -12,7 +11,7 @@
                  com.bhauman/figwheel-main {:mvn/version "0.2.3"}}}
 
   :prod
-  {:main-opts ["-m cljs.main -co prod.cljs.edn -c app.core"]}
+  {:main-opts ["-m cljs.main -co prod.cljs.edn -c app.build.prod"]}
 
   :nrepl
   {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.3"}

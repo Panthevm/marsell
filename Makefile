@@ -11,7 +11,7 @@ back-run:
 
 #Build
 build:
-	cd client && clj -m build
+	cd client && clj -A:prod
 
 #Docker
 docker-up:

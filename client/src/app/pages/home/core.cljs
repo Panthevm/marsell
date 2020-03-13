@@ -3,21 +3,10 @@
             [app.pages.model      :as page]
             [app.pages.home.model :as model]
 
-            [app.styles               :as styles]
             [app.components.card.core :as card]))
 
-(def styles
-  (styles/css
-   [:#catalog-item
-    [:.col {:display "inline-block"}]
-    [:.image {:position          "absolute"
-              :background-repeat "round"
-              :background-size   "cover"
-              :width             "100%"
-              :height            "100%"}]]))
-
 (defn catalogs []
-  [:div [:style styles]
+  [:div
    [:h3.col "КАТАЛОГ"]
    [:div.row
     [:div.col
