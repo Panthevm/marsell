@@ -1,7 +1,7 @@
 (ns app.components.card.core)
 
 (defn component []
-  [:div#car
+  [:div#card
    [:div.content
     [:img {:src "https://creamshop.ru/upload/iblock/faa/faaf6e3655b7a82cd99887835e798887.jpg"}]
     [:div.pt

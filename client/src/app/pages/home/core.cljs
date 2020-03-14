@@ -40,3 +40,10 @@
         [card/component]]]
 
       ])))
+
+(page/reg-page
+ model/show-page
+ (let [page (rf/subscribe [::model/show])]
+   (fn []
+     [:div.container
+      [card/component]])))

@@ -10,7 +10,7 @@ back-run:
 	cd server && clj -m app.rest
 
 #Build
-build:
+ui-build:
 	cd client && clj -A:prod
 
 #Docker

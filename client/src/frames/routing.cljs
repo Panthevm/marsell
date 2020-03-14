@@ -2,28 +2,22 @@
   (:require [re-frame.core  :as rf]
             [clojure.string :as str]))
 
-
 (defn pathify [path]
-  (filterv not-empty
-           (str/split (str/replace path #"^#" "")
-                      #"/")))
+  (-> path (str/split #"/") next not-empty))
 
 (defn params-node [node]
-  (-> vector?
-      (comp first)
-      (filter node)
-      first))
+  (filter (comp vector? first) node))
 
 (defn match [routes path]
   (loop [node              routes
          [current & other] path
          params            {}]
-    (if current
-      (if-let [node (get node current)]
-        (recur node other params)
-        (let [[[k] node] (params-node node)]
-          (recur node other (assoc params k current))))
-      {:match (:. node) :params params})))
+    (if-let [node (get node current)]
+      (recur node other params)
+      (if current
+        (let [[[[k] node]] (params-node node)]
+          (recur node other (assoc params k current)))
+        {:match (:- node) :params params}))))
 
 (defn parse-fragment [routes]
   (let [location (.. js/window -location -hash)
@@ -31,7 +25,7 @@
         route    (match routes path)]
     {:path   path
      :params (:params route)
-     :match  (or (:match route) :.)}))
+     :match  (or (:match route) :-)}))
 
 (rf/reg-event-fx
  ::location-changed
