@@ -1,4 +1,4 @@
-(ns ^:figwheel-hooks app.core
+(ns app.core
   (:require [reagent.dom :as dom]
             [re-frame.core  :as rf]
 
@@ -30,8 +30,9 @@
          [navbar/component]
          [content page]]))))
 
-(defn ^:export mount-root []
+(defn ^:export mount []
+  (rf/clear-subscription-cache!)
   (rf/dispatch-sync [::initialize])
   (dom/render [current-page] (js/document.getElementById "app")))
 
-(defn ^:after-load re-render [] (mount-root))
+(defn ^:dev/after-load reload [] (mount))
