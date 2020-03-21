@@ -1,9 +1,10 @@
 client/resources/public/js
-client/.cpcache
-client/.nrepl-port
-client/build
+client/package-lock.json
+client/node_modules
+client/.shadow-cljs
+
+pgdata/
 
 server/.cpcache
-pgdata/
 server/.cpcache
 server/.nrepl-port
