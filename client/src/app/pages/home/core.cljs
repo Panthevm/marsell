@@ -4,21 +4,6 @@
             [app.pages.home.model :as model]
 
             [app.components.card.core :as card]))
-
-(defn catalogs []
-  [:div
-   [:h3.col "КАТАЛОГ"]
-   [:div.row
-    [:div.col
-     [:a.banner
-      [:h2.col.caption [:b "Кровати"]]]]
-    [:div.col
-     [:a.banner
-      [:h2.col.caption [:b "Шкафы"]]]]
-    [:div.col
-     [:a.banner
-      [:h2.col.caption [:b "Комоды"]]]]]])
-
 (defn items []
   [:<>
    [:div.row
@@ -29,7 +14,6 @@
  (let [page (rf/subscribe [::model/index])]
    (fn []
      [:div.container
-      [catalogs]
       [items]
       [:div.row
        [:div.col

@@ -10,14 +10,15 @@
       (let [node (deref *node)]
         [:<>
          [header/component]
-         [:nav.container.between.center.row
-          [:section.navbar-section.row
-           (map-indexed
-            (fn [idx link] ^{:key idx}
-              [:section
-               [:a link [:b (:title link)]]])
-            (:nav node))]
-          [:section
-           [:span.pointer.pr "Список желаемого	"]
-           [:span.muted.space "/"]
-           [:span.pointer "Вход"]]]]))))
+         [:nav.container.none.m-block
+          [:div.between.row
+           [:section.row
+            (map-indexed
+             (fn [idx link] ^{:key idx}
+               [:section
+                [:a link [:b (:title link)]]])
+             (:nav node))]
+           [:section
+            [:span.pointer.pr "Список желаемого	"]
+            [:span.muted.space "/"]
+            [:span.pointer "Вход"]]]]]))))
