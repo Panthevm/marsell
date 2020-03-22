@@ -93,6 +93,7 @@ a {
 
 .row {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .col {
@@ -113,13 +114,20 @@ a {
     padding-right: 5px;
 }
 
+.px {
+    padding: 12px 0px 12px 0px;
+}
+
+.pr {
+    padding-right: 12px;
+}
+
 .small-icon {
     height: 10px;
 }
 
 .icon {
     height: 22px;
-    padding-right: 16px;
 }
 
 /* Form */

@@ -16,14 +16,11 @@
      [:div.container
       [items]
       [:div.row
-       [:div.col
-        [card/component]]
-       [:div.col
-        [card/component]]
-       [:div.col
-        [card/component]]]
-
-      ])))
+       (map-indexed
+        (fn [idx item]
+          [:div.col.center ^{:key idx}
+           [card/component]])
+        (range 6))]])))
 
 (page/reg-page
  model/show-page
