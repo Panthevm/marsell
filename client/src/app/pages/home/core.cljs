@@ -4,21 +4,17 @@
             [app.pages.home.model :as model]
 
             [app.components.card.core :as card]))
-(defn items []
-  [:<>
-   [:div.row
-    [:h3.col "Новинки"]]])
 
 (page/reg-page
  model/index-page
  (let [page (rf/subscribe [::model/index])]
    (fn []
      [:div.container
-      [items]
+      [:h3.col "Новинки"]
       [:div.row
        (map-indexed
-        (fn [idx item]
-          [:div.col.center ^{:key idx}
+        (fn [idx item] ^{:key idx}
+          [:div.col.center
            [card/component]])
         (range 6))]])))
 

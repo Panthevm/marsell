@@ -18,17 +18,15 @@
            [:section.row
             (map-indexed
              (fn [idx link] ^{:key idx}
-               [:section
-                [:a link [:b (:title link)]]])
+               [:a.pr.muted link [:b (:title link)]])
              (:nav node))]
-           [:section
-            [:span.pointer "Вход"]]]
+           [:a {:href "#/login"} "Вход"]]
           (when expand?
             [:div.m-none.border-bottom
              (map-indexed
               (fn [idx link] ^{:key idx}
                 [:div.center.px
-                 [:a link [:b (:title link)]]])
+                 [:a.pr.muted link [:b (:title link)]]])
               (:nav node))
              [:div.center.px
               [:a [:b "Обратный звонок"]]]

@@ -46,6 +46,10 @@ body {
   Aliases
 */
 
+.pointer {
+    cursor: pointer;
+}
+
 .none {
     display: none;
 }
@@ -61,10 +65,23 @@ body {
     align-items: center;
 }
 
+.text-center {
+    text-align: center;
+}
+
+.margin-auto {
+    margin: auto;
+}
+
+.w-50 {
+    width: 50%;
+}
+
 
 /*
   Typography
  */
+
 h1 {
     font-size: 42px;
 }
@@ -81,7 +98,7 @@ h3 {
 }
 
 a {
-    padding-right: 15px;
+    color: #333;
     text-decoration: none;
 }
 
@@ -132,15 +149,22 @@ a {
 
 /* Form */
 
-.form input {
+form input {
     padding: 5px 0px 5px 0px;
+    margin-bottom: 24px;
 }
 
-.form .input-icon {
+form label {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #999999;
+}
+
+form .input-icon {
     position: relative;
 }
 
-.form .input-icon img {
+form .input-icon img {
     position: absolute;
     padding-top: 5px;
     height: 22px;
@@ -148,23 +172,30 @@ a {
     right: 0;
 }
 
-.form input {
+form input {
     border: none;
     width: 100%;
     border-bottom: 1px solid #ccc;
 }
 
-.form input:focus {
+form input:focus {
     border-bottom: 1px solid #333;
-}
-
-.pointer {
-    cursor: pointer;
 }
 
 .border-bottom {
     border-bottom: 1px solid gray;
 }
+
+form .btn {
+    margin: 24px 24px;
+    padding: 12px 46px 12px 46px;
+}
+
+button.black {
+    color: white;
+    background: #333;
+}
+
 
 /*
   Components
@@ -176,10 +207,6 @@ nav {
     padding: 1rem;
 }
 
-nav a {
-    color: #999999;
-}
-
 nav a:hover {
     color: black;
 }
@@ -189,6 +216,7 @@ nav a:hover {
     border: none;
     padding: 6px 12px 6px 12px;
 }
+
 
 /* Card */
 

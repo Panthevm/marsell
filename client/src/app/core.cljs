@@ -9,6 +9,7 @@
 
             [app.pages.model      :as pages]
             [app.pages.home.core]
+            [app.pages.login.core]
 
             [app.components.navbar.core  :as navbar]))
 
