@@ -11,12 +11,19 @@
             [app.pages.home.core]
             [app.pages.login.core]
 
+
+
             [app.components.navbar.core  :as navbar]))
+
+(def ^:const config
+ {:server-url "http://localhost:8080"
+  :client-url "http://localhost:3000"})
 
 (rf/reg-event-fx
  ::initialize
- (fn []
-   {:frames.routing/init routes/routes}))
+ (fn [{db :db}]
+   {:db (assoc db :config config)
+    :frames.routing/init routes/routes}))
 
 (defn content [page]
   (if page
@@ -35,5 +42,3 @@
   (rf/clear-subscription-cache!)
   (rf/dispatch-sync [::initialize])
   (dom/render [current-page] (js/document.getElementById "app")))
-
-(defn ^:dev/after-load reload [] (mount))

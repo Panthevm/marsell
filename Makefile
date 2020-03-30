@@ -1,7 +1,4 @@
 #Repl
-ui-repl:
-	cd client && rm -rf .cpcache/ && npx shadow-cljs watch app
-
 back-repl:
 	cd server && rm -rf .cpcache/ && clj -A:nrepl
 
@@ -11,7 +8,7 @@ back-run:
 
 #Build
 ui-build:
-	cd client && npx shadow-cljs release prod
+	cd client && clj -A:prod
 
 #Docker
 docker-up:

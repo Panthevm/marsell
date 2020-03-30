@@ -9,7 +9,7 @@
  (fn []
    [:div.container.center
     [:form
-     [:h1.text-center.px "Авторизация"]
+     [:h1.text-center.px "Авторизаця"]
      [:label "Email"]
      [:input]
      [:label "Пароль"]

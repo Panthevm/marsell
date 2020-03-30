@@ -1,7 +1,5 @@
 client/resources/public/js
-client/package-lock.json
-client/node_modules
-client/.shadow-cljs
+client/.cpcache
 
 pgdata/
 
