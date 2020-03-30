@@ -5,7 +5,7 @@
 
 
  :aliases
- {:prod {:main-opts ["-m cljs.main -co prod.cljs.edn -c app.build.prod"]}
+ {:prod {:main-opts ["-m cljs.main -co prod.cljs.edn -c app.core"]}
 
   :fig
   {:extra-paths ["resources"]

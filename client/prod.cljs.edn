@@ -1,4 +1,4 @@
-{:main          'app.build.prod
+{:main          app.core
  :output-to     "resources/public/js/main.js"
  :output-dir    "resources/public/js/out"
  :asset-path    "js/out"
