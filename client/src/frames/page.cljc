@@ -1,4 +1,4 @@
-(ns app.pages.model
+(ns frames.page
   (:require [re-frame.core :as rf]))
 
 (defonce pages (atom {}))

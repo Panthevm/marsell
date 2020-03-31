@@ -2,7 +2,6 @@
   (:require [re-frame.core :as rf]))
 
 (def ^:const index-page ::index)
-(def ^:const show-page  ::show)
 
 (rf/reg-event-fx
  index-page

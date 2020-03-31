@@ -16,4 +16,4 @@
      [:div.row.center.pointer
       [:div.space
        [:span.muted "0 шт. - "] [:b "0.00 "]]
-      [:img.small-icon.muted {:src "../icons/arrow-down.svg"}]]]]])
+      [:img.small-icon.muted {:src "icons/arrow-down.svg"}]]]]])

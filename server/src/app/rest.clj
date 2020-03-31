@@ -7,7 +7,7 @@
             [app.handler    :as handler]))
 
 
-(defn -main []
+(defn -main [& args]
   (let [db    (db/connect)
         stack (-> #'handler/handler
                   (middleware/add-db db)

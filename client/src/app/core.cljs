@@ -2,43 +2,40 @@
   (:require [reagent.dom :as dom]
             [re-frame.core  :as rf]
 
+            ;Frames
             [frames.xhr]
-            [frames.routing]
+            [frames.page    :as page]
+            [frames.routing :as routing]
 
-            [app.routes     :as routes]
+            ;App
+            [app.routes :as routes]
 
-            [app.pages.model      :as pages]
+            ;Pages
             [app.pages.home.core]
             [app.pages.login.core]
 
-
-
+            ;Components
             [app.components.navbar.core  :as navbar]))
-
-(def ^:const config
- {:server-url "http://localhost:8080"
-  :client-url "http://localhost:3000"})
 
 (rf/reg-event-fx
  ::initialize
- (fn [{db :db}]
-   {:db (assoc db :config config)
-    :frames.routing/init routes/routes}))
+ (fn []
+   {:frames.routing/init routes/routes}))
 
-(defn content [page]
+(defn content [page params]
   (if page
-    [page]
+    [page params]
     [:div "Страница не найдена"]))
 
 (defn current-page []
-  (let [route (rf/subscribe [:frames.routing/current])]
+  (let [route (rf/subscribe [::routing/current])]
     (fn []
-      (let [page (->> @route :match (get @pages/pages))]
+      (let [page   (->> @route :match (get @page/pages))
+            params (->> @route :params)]
         [:<>
          [navbar/component]
-         [content page]]))))
+         [content page params]]))))
 
 (defn ^:export mount []
-  (rf/clear-subscription-cache!)
   (rf/dispatch-sync [::initialize])
   (dom/render [current-page] (js/document.getElementById "app")))

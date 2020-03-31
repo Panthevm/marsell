@@ -1,6 +1,6 @@
 (ns app.pages.home.core
   (:require [re-frame.core        :as rf]
-            [app.pages.model      :as page]
+            [frames.page      :as page]
             [app.pages.home.model :as model]
 
             [app.components.card.core :as card]))
@@ -17,10 +17,3 @@
           [:div.col.center
            [card/component]])
         (range 6))]])))
-
-(page/reg-page
- model/show-page
- (let [page (rf/subscribe [::model/show])]
-   (fn []
-     [:div.container
-      [card/component]])))

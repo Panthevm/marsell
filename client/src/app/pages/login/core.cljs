@@ -1,7 +1,5 @@
 (ns app.pages.login.core
-  (:require [re-frame.core        :as rf]
-            [app.pages.model      :as page]
-
+  (:require [frames.page      :as page]
             [app.pages.login.model :as model]))
 
 (page/reg-page

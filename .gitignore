@@ -1,5 +1,6 @@
 client/resources/public/js
 client/.cpcache
+client/.nrepl-port
 
 pgdata/
 
