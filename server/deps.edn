@@ -4,7 +4,8 @@
          org.immutant/web       {:mvn/version "RELEASE"}
          ring/ring-json         {:mvn/version "RELEASE"}
          clj-pg                 {:mvn/version "RELEASE"}
-         json-schema            {:mvn/version "RELEASE"}}
+         json-schema            {:mvn/version "RELEASE"}
+         buddy                  {:mvn/version "RELEASE"}}
  :aliases
  {:nrepl {:extra-deps {cider/cider-nrepl {:mvn/version "RELEASE"}}
           :main-opts  ["-m" "nrepl.cmdline"

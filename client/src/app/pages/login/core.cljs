@@ -1,21 +1,33 @@
 (ns app.pages.login.core
-  (:require [frames.page      :as page]
-            [app.pages.login.model :as model]))
+  (:require [frames.page                :as page]
+            [re-frame.core              :as rf]
+            [app.pages.login.model      :as model]
+            [app.components.form.inputs :as inputs]
+
+            [app.pages.login.form :as form]))
+
+(def buttons
+  (letfn [(create []
+            (rf/dispatch [::form/eval {:success {:event ::model/login}}]))]
+    [:div.text-center
+     [:button.btn.black.my {:on-click create}
+      "Войти"]
+     [:div
+      [:a.muted.my {:href "#/login"}
+       "Регистрация"]]]))
+
+(defn form []
+  [:form
+   [:h1.text-center.px "Авторизаця"]
+   [:label "Email"]
+   [inputs/input form/path [:email]]
+   [:label "Пароль"]
+   [inputs/input form/path [:password]]])
 
 (page/reg-page
  model/index-page
  (fn []
    [:div.container.center
-    [:form
-     [:h1.text-center.px "Авторизаця"]
-     [:label "Email"]
-     [:input]
-     [:label "Пароль"]
-     [:input]
-     [:div.text-center
-      [:button.btn.black
-       "Войти"]
-      [:div
-       [:a.muted {:href "#/login"}
-        "Регистрация"]]
-      ]]]))
+    [:div
+     [form]
+     buttons]]))

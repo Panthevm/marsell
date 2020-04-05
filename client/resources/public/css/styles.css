@@ -69,8 +69,16 @@ body {
     text-align: center;
 }
 
+.text-end {
+    text-align: end;
+}
+
 .margin-auto {
     margin: auto;
+}
+
+.rounded {
+    border-radius: 2rem;
 }
 
 .w-50 {
@@ -131,8 +139,13 @@ a {
     padding-right: 5px;
 }
 
-.px {
+.py {
     padding: 12px 0px 12px 0px;
+}
+
+
+.my {
+    margin: 12px 0px 12px 0px;
 }
 
 .pr {
@@ -187,13 +200,15 @@ form input:focus {
 }
 
 form .btn {
+    border-radius: 10px;
     margin: 24px 24px;
     padding: 12px 46px 12px 46px;
 }
 
 button.black {
     color: white;
-    background: #333;
+    border-radius: 12px;
+    background: #14121f;
 }
 
 
@@ -214,26 +229,35 @@ nav a:hover {
 .btn {
     background: none;
     border: none;
-    padding: 6px 12px 6px 12px;
+    padding: 12px 32px 12px 32px;
 }
 
 
 /* Card */
 
 #card {
+    margin-bottom: 2rem;
+    max-height: 480px;
     max-width: 310px;
 }
 
 #card img {
     max-height: 360px;
-    padding: 10px;
     max-width: 270px;
 }
 
 #card .content {
-    padding: 10px;
+    min-height: 42px;
+}
+
+#card .content .body {
+    display: none;
 }
 
 #card:hover {
     box-shadow: 0px 0px 0px 2px #f0f0f0;
+}
+
+#card:hover .content .body{
+    display: block;
 }

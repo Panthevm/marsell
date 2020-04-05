@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]))
 
 (defn *json-fetch [{:keys [uri success error] :as opts}]
-  (let [fetch-opts (-> (merge {:headers {"Content-Type" "application/json"}} opts)
+  (let [fetch-opts (-> (merge {:headers {"Content-Type" "application/json"}}
+                              opts)
                        (dissoc :uri :success :error))
         fetch-opts (cond-> fetch-opts
                      (:body opts) (assoc :body (.stringify js/JSON (clj->js (:body opts)))))

@@ -17,10 +17,15 @@
             ;Components
             [app.components.navbar.core  :as navbar]))
 
+(def ^:const config
+  {:base-url   "http://localhost:8080/"
+   :client-url "http://localhost:3000/"})
+
 (rf/reg-event-fx
  ::initialize
- (fn []
-   {:frames.routing/init routes/routes}))
+ (fn [{db :db} _]
+   {:db (assoc db :config config)
+    :frames.routing/init routes/routes}))
 
 (defn content [page params]
   (if page
