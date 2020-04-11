@@ -12,7 +12,7 @@
 
             ;Pages
             [app.pages.home.core]
-            [app.pages.login.core]
+            [app.pages.auth.core]
 
             ;Components
             [app.components.navbar.core  :as navbar]))

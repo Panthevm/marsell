@@ -1,12 +1,13 @@
-(ns app.pages.login.form
+(ns app.pages.auth.form
   (:require [re-frame.core :as rf]
             [zenform.model :as zm]))
 
 (def ^:const path [:form ::path])
 (def ^:const schema
   {:type :form
-   :fields {:email    {:type :string}
-            :password {:type :string}}})
+   :fields {:email            {:type :string}
+            :password         {:type :string}
+            :confirm-password {:type :string}}})
 
 (rf/reg-event-fx
  ::init

@@ -1,20 +1,16 @@
 (ns app.pages.auth.core
   (:require [frames.page                :as page]
             [re-frame.core              :as rf]
-            [app.pages.auth.model      :as model]
             [app.components.form.inputs :as inputs]
-
-            [app.pages.auth.form :as form]))
+            [app.pages.auth.model       :as model]
+            [app.pages.auth.form        :as form]))
 
 (def buttons
   (letfn [(create []
             (rf/dispatch [::form/eval {:success {:event ::model/login}}]))]
     [:div.text-center
-     [:button.btn.black.my {:on-click create}
-      "Войти"]
-     [:div
-      [:a.muted.my {:href "#/auth"}
-       "Регистрация"]]]))
+     [:button.btn.black.my {:on-click create} "Войти"]
+     [:a.muted.my          {:href "#/login"}  "Регистрация"]]))
 
 (defn form []
   [:form

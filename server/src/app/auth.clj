@@ -11,7 +11,14 @@
 (def pkey "secret")
 
 (def auth-backend
-  (token/jws-backend {:secret pkey :options {:alg :hs512}}))
+  (token/jws-backend {:secret pkey :options {:alg :es256}}))
+
+(defn sign [privat-key payload]
+  (jwt/sign payload pkey {:alg :es256}))
+
+
+(defn unsign [public-key signed-data]
+  (jwt/unsign signed-data public-key {:alg :es256}))
 
 (defn -get [db email]
   (pg/query-first db
@@ -27,7 +34,7 @@
       (a/ok {:token (jwt/sign (dissoc user :password) pkey)})
       (a/bad-request))))
 
-(defn registration
+(defn join
   [request]
   (letfn [(encrypt [request]
             (update-in request [:body :password] hashers/encrypt))

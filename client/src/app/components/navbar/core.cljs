@@ -20,7 +20,7 @@
              (fn [idx link] ^{:key idx}
                [:a.pr.muted link [:b (:title link)]])
              (:nav node))]
-           [:a {:href "#/login"} "Вход"]]
+           [:a {:href "#/auth"} "Вход"]]
           (when expand?
             [:div.m-none.border-bottom
              (map-indexed

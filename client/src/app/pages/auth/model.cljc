@@ -1,20 +1,20 @@
-(ns app.pages.login.model
-  (:require [re-frame.core        :as rf]
-            [app.pages.login.form :as form]))
+(ns app.pages.auth.model
+  (:require [re-frame.core       :as rf]
+            [app.pages.auth.form :as form]))
 
 (def ^:const index-page ::index)
 
 (rf/reg-event-fx
  index-page
- (fn [_ [_ hook]]
+ (fn [_ [_ phase s]]
    (cond-> {}
-     (#{:mount} hook)
+     (#{:init :params} phase)
      (update :dispatch-n conj [::form/init]))))
 
 (rf/reg-event-fx
  ::login
  (fn [_ [_ form]]
-   {:json/fetch {:uri     "/auth/login"
+   {:json/fetch {:uri     "/login"
                  :method  "POST"
                  :body    form
                  :success {:event ::success-login}}}))

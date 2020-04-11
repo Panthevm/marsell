@@ -1,6 +1,6 @@
 (ns app.routes)
 
 (def ^:const routes
-  {:-      :app.pages.login.model/index
-   "login" {:- :app.pages.login.model/index}
+  {:-      :app.pages.home.model/index
+   "auth"  {:- :app.pages.auth.model/index}
    "home"  {:- :app.pages.home.model/index}})

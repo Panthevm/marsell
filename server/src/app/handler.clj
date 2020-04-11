@@ -12,7 +12,6 @@
     [["/categories" {:get    {:handler (partial action/-get    categories/table)}
                      :post   {:handler (partial action/-post   categories/table)}
                      :delete {:handler (partial action/-delete categories/table)}}]
-     ["/auth"
-      ["/login"        {:post {:handler auth/login}}]
-      ["/registration" {:post {:handler auth/registration}}]]])
+     ["/login" {:post {:handler auth/login}}]
+     ["/join"  {:post {:handler auth/join}}]])
    (constantly {:status 404, :body "Not found"})))
