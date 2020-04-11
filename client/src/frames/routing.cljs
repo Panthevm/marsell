@@ -2,44 +2,48 @@
   (:require [re-frame.core  :as rf]
             [clojure.string :as str]))
 
-(defn pathify [path]
-  (-> path (str/split #"/") next not-empty))
-
-(defn params-node [node]
-  (filter (comp vector? first) node))
-
 (defn match [routes path]
-  (loop [node              routes
-         [current & other] path
-         params            {}]
-    (if-let [node (get node current)]
-      (recur node other params)
-      (if current
-        (let [[[[k] node]] (params-node node)]
-          (recur node other (assoc params k current)))
-        {:match (:- node) :params params}))))
+  (letfn [(params-node [node]
+            (filter (comp vector? first) node))]
+    (loop [node              routes
+           [current & other] path
+           params            {}]
+      (if-let [node (get node current)]
+        (recur node other params)
+        (if current
+          (let [[[[k] node]] (params-node node)]
+            (recur node other (assoc params k current)))
+          {:match (:- node) :params params})))))
 
 (defn parse-fragment [routes]
-  (let [location (.. js/window -location -hash)
-        path     (pathify location)
-        route    (match routes path)]
-    {:path   path
-     :params (:params route)
-     :match  (or (:match route) :-)}))
+  (letfn [(parse-params [params]
+            (reduce
+             (fn [acc query]
+               (let [[k v]  (str/split query #"=" 2)]
+                 (assoc acc (keyword k) v)))
+             {} (str/split params "&")))
+          (parse-location [location]
+            (let [[path params] (str/split location #"\?")]
+              {:path   (-> path (str/split #"/") next not-empty)
+               :params params}))]
+    (let [fragment (parse-location (.. js/window -location -hash))
+          route    (match routes (:path fragment))]
+      {:path   (:path fragment)
+       :query  (parse-params (:params fragment))
+       :params (:params route)
+       :match  (or (:match route) :-)})))
 
 (rf/reg-event-fx
  ::location-changed
  (fn [{db :db} [_ routes]]
-   (let [{:keys [match params] :as current} (parse-fragment routes)
-         {old-match :match old-params :params} (:routing db)
-         page-hook (cond
-                     (nil? old-match)       [[match :mount]]
-                     (not= old-match match) [[old-match :unmount old-params]
-                                             [match     :mount   params]]
-                     :else [[match :unmount params]
-                            [match :mount   params]])]
-     {:db         (assoc db :routing current)
-      :dispatch-n page-hook})))
+   (letfn [(add-event [opts event]
+             (update opts :dispatch-n conj event))]
+     (let [{match  :match params  :params query  :query :as new} (parse-fragment routes)
+           {omatch :match oparams :params oquery :query :as old} (:routing db)]
+       (cond-> {:db (assoc db :routing new)}
+         (=    query oquery) (add-event [match  :init   new])
+         (not= query oquery) (add-event [match  :params new])
+         (not= omatch match) (add-event [omatch :deinit old]))))))
 
 (rf/reg-fx
  ::init
