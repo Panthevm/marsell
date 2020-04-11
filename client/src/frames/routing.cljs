@@ -1,6 +1,7 @@
 (ns frames.routing
-  (:require [re-frame.core  :as rf]
-            [clojure.string :as str]))
+  (:require [re-frame.core  :as rf]))
+
+(def ^:const *window js/window)
 
 (defn match [routes path]
   (letfn [(params-node [node]
@@ -17,17 +18,17 @@
 
 (defn parse-fragment [routes]
   (letfn [(parse-params [params]
-            (reduce
-             (fn [acc query]
-               (let [[k v]  (str/split query #"=" 2)]
-                 (assoc acc (keyword k) v)))
-             {} (str/split params "&")))
+            (when params
+              (reduce
+               (fn [acc [_ k v]]
+                 (assoc acc (keyword k) v))
+               {} (re-seq #"([^=&]+)([^&]*)?" params))))
           (parse-location [location]
-            (let [[path params] (str/split location #"\?")]
-              {:path   (-> path (str/split #"/") next not-empty)
+            (let [[path params]  (re-seq #"[^?]+"  location)]
+              {:path   (->> path (re-seq #"[^/]+") next)
                :params params}))]
-    (let [fragment (parse-location (.. js/window -location -hash))
-          route    (match routes (:path fragment))]
+    (let [fragment (parse-location (.. *window -location -hash))
+          route    (match routes   (:path fragment))]
       {:path   (:path fragment)
        :query  (parse-params (:params fragment))
        :params (:params route)
@@ -48,8 +49,9 @@
 (rf/reg-fx
  ::init
  (fn [routes]
-   (aset js/window "onhashchange" #(rf/dispatch [::location-changed routes]))
-   (rf/dispatch [::location-changed routes])))
+   (letfn [(event [] (rf/dispatch [::location-changed routes]))]
+     (aset *window "onhashchange" event)
+     (event))))
 
 (rf/reg-sub
  ::current
