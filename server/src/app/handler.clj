@@ -8,11 +8,8 @@
 
 (def handler
   (handler/routing
-   {"categories" {:options {:handler (fn [e] {:status 200 :body nil})}
-                  :get    {:handler (partial action/-get    categories/table)}
+   {"categories" {:get    {:handler (partial action/-get    categories/table)}
                   :post   {:handler (partial action/-post   categories/table)}
                   :delete {:handler (partial action/-delete categories/table)}}
-    "login" {:options {:handler (fn [e] {:status 200 :body nil})}
-             :post {:handler auth/login}}
-    "join"  {:options {:handler (fn [e] {:status 200 :body nil})}
-             :post {:handler auth/join}}}))
+    "login" {:post {:handler auth/login}}
+    "join"  {:post {:handler auth/join}}}))
