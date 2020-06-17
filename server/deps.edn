@@ -1,6 +1,5 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure    {:mvn/version "RELEASE"}
-         metosin/reitit-ring    {:mvn/version "RELEASE"}
          org.immutant/web       {:mvn/version "RELEASE"}
          ring/ring-json         {:mvn/version "RELEASE"}
          clj-pg                 {:mvn/version "RELEASE"}

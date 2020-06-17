@@ -12,7 +12,6 @@
         stack (-> #'handler/handler
                   (middleware/add-db db)
                   (json/wrap-json-body {:keywords? true})
-                  json/wrap-json-response
-                  middleware/wrap-cors)]
+                  json/wrap-json-response)]
     (migration/migration db)
     (web/run stack)))
