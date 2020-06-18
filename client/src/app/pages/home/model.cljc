@@ -7,9 +7,9 @@
  index-page
  (fn [_ [_ hook]]
    (condp = hook
-     :mount {:json/fetch {:uri     "/categories"
-                          :method  "get"
-                          :success {:event ::success}}}
+     :init {:json/fetch {:uri     "/pin"
+                         :method  "get"
+                         :success {:event ::success}}}
      nil)))
 
 (rf/reg-event-db

@@ -6,10 +6,13 @@
              [categories :as categories]
              [user       :as user])))
 
+(def ^:const routing
+  {"categories" {:get    {:handler (partial action/-get    categories/table)}
+                 :post   {:handler (partial action/-post   categories/table)}
+                 :delete {:handler (partial action/-delete categories/table)}}
+   "login" {:post {:handler auth/login}}
+   "pin"   {:get  {:handler (fn [s] {:status 200 :body "pong"})}}
+   "join"  {:post {:handler auth/join}}})
+
 (def handler
-  (handler/routing
-   {"categories" {:get    {:handler (partial action/-get    categories/table)}
-                  :post   {:handler (partial action/-post   categories/table)}
-                  :delete {:handler (partial action/-delete categories/table)}}
-    "login" {:post {:handler auth/login}}
-    "join"  {:post {:handler auth/join}}}))
+  (handler/routing routing))

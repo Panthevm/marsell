@@ -9,9 +9,10 @@
 
 (defn -main [& args]
   (let [db    (db/connect)
-        stack (-> #'handler/handler
+        stack (-> handler/handler
                   (middleware/add-db db)
                   (json/wrap-json-body {:keywords? true})
-                  json/wrap-json-response)]
+                  json/wrap-json-response
+                  middleware/wrap-cors)]
     (migration/migration db)
     (web/run stack)))

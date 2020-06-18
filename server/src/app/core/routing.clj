@@ -1,32 +1,43 @@
 (ns app.core.routing)
 
-(defn cors [request node]
-  (letfn [(allow-methods [node]
-            (->> node
+(def ^:const http {:not-found {:status 404 :body {:msg "Resource not found"}}
+                   :ok        {:status 200}})
+
+(defn option
+  [resource]
+  (letfn [(allow-methods [resource]
+            (->> resource
                  (reduce
                   (fn [acc [key value]]
                     (str acc (get {:get "GET" :post "POST" :delete "DELETE"} key) \,))
                   "")
                  drop-last (apply str)))]
-    {:status  200
-     :headers {"Access-Control-Allow-Origin"  "*"
-               "Access-Control-Allow-Headers" "X-Requested-With,Content-Type,Cache-Control,Origin,Accept,Authorization"
-               "Access-Control-Allow-Methods" (allow-methods node)}}))
+    (-> (:ok http)
+        (assoc-in [:headers "Allow"] (allow-methods resource)))))
 
-(defn- match [routes uri]
-  (loop [[current & other :as path] (re-seq #"[^/]+" uri)
-         node               routes]
+(defn match*
+  [node [current & other :as path]]
+  (cond (get node current)               (recur (get node current) other)
+        (and (seq path) (get node :var)) (recur (:var node) other)
+        :else                            node))
+
+(defn match
+  [router uri]
+  (match* router (re-seq #"[^/]+" uri)))
+
+(defn response [request resource]
+  (let [method  (:request-method request)
+        handler (-> resource method :handler)]
     (cond
-      (get node current)               (recur other (get node current))
-      (and (seq path) (get node :var)) (recur other (:var node))
-      :else                            node)))
+      (= :options method) (option  resource)
+      (fn? handler)       (handler request)
+      (not handler)       (:not-found http))))
 
-(defn routing [routes]
+(defn routing
+  [routes]
   (fn [request]
-    (if-let [node (match routes (:uri request))]
-      (let [method (:request-method request)]
-        (if (= :options method)
-          (cors request node)
-          (let [handler (-> node method :handler)]
-            (handler request))))
-      2)))
+    (response request (match routes (:uri request)))))
+
+;;[GET] curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/pin
+
+;;[TIME] "curl 'http://localhost:8080/pin' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: en-US,en;q=0.8,ja;q=0.6' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.86 Safari/537.36' -H 'Connection: keep-alive' --compressed -s -o /dev/null -w  "
