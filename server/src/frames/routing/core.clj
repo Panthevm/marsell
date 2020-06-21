@@ -1,4 +1,4 @@
-(ns app.core.routing)
+(ns frames.routing.core)
 
 (def ^:const http {:not-found {:status 404 :body {:msg "Resource not found"}}
                    :ok        {:status 200}})
@@ -26,7 +26,7 @@
   (match* router (re-seq #"[^/]+" uri)))
 
 (defn response [request resource]
-  (let [method  (:request-method request)
+  (let [method  (:method request)
         handler (-> resource method :handler)]
     (cond
       (= :options method) (option  resource)
@@ -38,6 +38,7 @@
   (fn [request]
     (response request (match routes (:uri request)))))
 
-;;[GET] curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/pin
+;;[GET]  curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/pin
+;;[POST] curl -X POST http://localhost:8080/post -d '{"variable": "value"}'
 
-;;[TIME] "curl 'http://localhost:8080/pin' -H 'Accept-Encoding: gzip, deflate, sdch' -H 'Accept-Language: en-US,en;q=0.8,ja;q=0.6' -H 'Upgrade-Insecure-Requests: 1' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.86 Safari/537.36' -H 'Connection: keep-alive' --compressed -s -o /dev/null -w  "
+;; curl --output /dev/null --silent --write-out 'time_namelookup:  %{time_namelookup}s\n time_connect:  %{time_connect}s\n time_appconnect:  %{time_appconnect}s\n time_pretransfer:  %{time_pretransfer}s\n time_redirect:  %{time_redirect}s\n time_starttransfer:  %{time_starttransfer}s\n' http://localhost:8080/pin

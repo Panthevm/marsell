@@ -1,10 +1,13 @@
-(ns app.middleware)
+(ns app.middleware
+  (:require [cheshire.core  :as ch]))
 
-(defn add-db [handler db]
+(defn add-db
+  [handler db]
   (fn [req]
     (handler (assoc req :db db))))
 
-(defn wrap-cors [handler]
+(defn wrap-cors
+  [handler]
   (fn [request]
     (-> (handler request)
         (assoc-in [:headers "Access-Control-Allow-Origin"]  "*")
