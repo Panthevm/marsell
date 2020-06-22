@@ -6,7 +6,7 @@
              [categories :as categories]
              [user       :as user])))
 
-(def ^:const routing
+(def routing
   {"categories" {:get    {:handler (partial action/-get    categories/table)}
                  :post   {:handler (partial action/-post   categories/table)}
                  :delete {:handler (partial action/-delete categories/table)}}

@@ -7,9 +7,11 @@
 
 
 (defn -main [& args]
-  (let [db    (db/connect)
+  (let [db    db/connect
         stack (-> #'handler/handler
                   (middleware/add-db db)
-                  middleware/wrap-cors)]
+                  middleware/wrap-json-body
+                  middleware/wrap-cors
+                  middleware/wrap-edn-body)]
     (migration/migration db)
     (server/run stack {:port 8080})))

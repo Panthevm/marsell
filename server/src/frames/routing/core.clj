@@ -1,17 +1,19 @@
-(ns frames.routing.core)
+(ns frames.routing.core
+  (:require [clojure.string :as s]))
 
-(def ^:const http {:not-found {:status 404 :body {:msg "Resource not found"}}
-                   :ok        {:status 200}})
+(def ^:const http-methods
+  {:get "GET" :post "POST" :delete "DELETE"})
 
-(defn option
+(def ^:const http
+  {:not-found {:status 404 :body {:msg "Resource not found"}}
+   :ok        {:status 200}})
+
+(defn options
   [resource]
   (letfn [(allow-methods [resource]
             (->> resource
-                 (reduce
-                  (fn [acc [key value]]
-                    (str acc (get {:get "GET" :post "POST" :delete "DELETE"} key) \,))
-                  "")
-                 drop-last (apply str)))]
+                 (reduce-kv #(str %1 (get http-methods %2)) "")
+                 (s/join ",")))]
     (-> (:ok http)
         (assoc-in [:headers "Allow"] (allow-methods resource)))))
 
@@ -29,7 +31,7 @@
   (let [method  (:method request)
         handler (-> resource method :handler)]
     (cond
-      (= :options method) (option  resource)
+      (= :options method) (options  resource)
       (fn? handler)       (handler request)
       (not handler)       (:not-found http))))
 
@@ -37,6 +39,7 @@
   [routes]
   (fn [request]
     (response request (match routes (:uri request)))))
+
 
 ;;[GET]  curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/pin
 ;;[POST] curl -X POST http://localhost:8080/post -d '{"variable": "value"}'

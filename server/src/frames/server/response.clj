@@ -1,9 +1,8 @@
 (ns frames.server.response
-  (:require [clojure.string :as str]
-            [cheshire.core  :as ch])
+  (:require [clojure.string :as str])
   (:import  [java.io ByteArrayOutputStream]))
 
-(def clrf "\r\n")
+(def empty-line "\r\n")
 
 (def response-reasons {200 "OK"})
 
@@ -16,22 +15,20 @@
 
 (defn- build-headers [headers body]
   (let [extended-headers (add-body-header headers body)]
-    (if (seq extended-headers)
-      (reduce
-       (fn [acc [k v]]
-         (str acc k ": " v clrf))
-       "" extended-headers))))
+    (reduce
+     (fn [acc [k v]]
+       (str acc k ": " v empty-line))
+     "" extended-headers)))
 
 (defn build-response [{:keys [status headers body]}]
   (letfn [(append [out data]
             (when data
               (let [bs (.getBytes data)]
                 (.write out bs 0 (alength bs)))))]
-    (let [out    (ByteArrayOutputStream.)
-          body   (some-> body ch/generate-string)]
+    (let [out (ByteArrayOutputStream.)]
       (append out (status-line status))
-      (append out clrf)
+      (append out empty-line)
       (append out (build-headers headers body))
-      (append out clrf)
+      (append out empty-line)
       (append out body)
       (.toByteArray out))))
