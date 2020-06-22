@@ -12,7 +12,9 @@
   [resource]
   (letfn [(allow-methods [resource]
             (->> resource
-                 (reduce-kv #(str %1 (get http-methods %2)) "")
+                 (reduce
+                  (fn [acc [k]]
+                    (str acc (get http-methods k))) "")
                  (s/join ",")))]
     (-> (:ok http)
         (assoc-in [:headers "Allow"] (allow-methods resource)))))
