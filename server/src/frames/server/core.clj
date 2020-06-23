@@ -5,28 +5,32 @@
   (:import  [java.net ServerSocket]
             [java.util.concurrent Executors]))
 
-(defn- read-request [handler reader]
+(defn- read-request
+  [handler reader]
   (->> reader
-       (request/parse-request)
+       (request/parse)
        (handler)
-       (response/build-response)))
+       (response/make)))
 
-(defn- write-response [response writer]
+(defn- write-response
+  [response writer]
   (.write writer response)
   (.flush writer))
 
-(defn- exec-request [handler socket]
+(defn- execute-request
+  [handler socket]
   (with-open [reader (io/reader        socket)
               writer (io/output-stream socket)]
     (-> handler
         (read-request   reader)
         (write-response writer))))
 
-(defn run [handler options]
-  (with-open [socket      (ServerSocket. (:port options))
-              thread-pool (Executors/newFixedThreadPool 10)]
+(defn run
+  [handler options]
+  (with-open [socket (ServerSocket. (:port options))
+              thread (Executors/newFixedThreadPool 10)]
     (loop []
       (let [accept  (.accept socket)
-            request (partial exec-request handler)]
-        (.execute thread-pool #(request accept)))
+            request (partial execute-request handler)]
+        (.execute thread #(request accept)))
       (recur))))

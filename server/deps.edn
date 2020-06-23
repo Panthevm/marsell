@@ -1,6 +1,7 @@
 {:paths ["src"]
- :deps  {org.clojure/clojure    {:mvn/version "RELEASE"}
-         cheshire               {:mvn/version "RELEASE"}
+ :deps  {org.clojure/clojure       {:mvn/version "RELEASE"}
+         org.postgresql/postgresql {:mvn/version "RELEASE"}
+         cheshire                  {:mvn/version "RELEASE"}
 
          clj-pg                 {:mvn/version "RELEASE"}
          json-schema            {:mvn/version "RELEASE"}

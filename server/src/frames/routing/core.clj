@@ -27,7 +27,7 @@
 
 (defn match
   [router uri]
-  (match* router (re-seq #"[^/]+" uri)))
+  (match* router (s/split uri #"/")))
 
 (defn response [request resource]
   (let [method  (:method request)
