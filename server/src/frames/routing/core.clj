@@ -1,5 +1,4 @@
-(ns frames.routing.core
-  (:require [clojure.string :as s]))
+(ns frames.routing.core)
 
 (def ^:const http-methods
   {:get "GET" :post "POST" :delete "DELETE"})
@@ -12,10 +11,11 @@
   [resource]
   (letfn [(allow-methods [resource]
             (->> resource
-                 (reduce
-                  (fn [acc [k]]
-                    (str acc (get http-methods k))) "")
-                 (s/join ",")))]
+             (reduce
+              (fn [acc [k]]
+                (str acc (name k) ","))
+              "")
+             drop-last (apply str)))]
     (-> (:ok http)
         (assoc-in [:headers "Allow"] (allow-methods resource)))))
 
@@ -27,13 +27,13 @@
 
 (defn match
   [router uri]
-  (match* router (s/split uri #"/")))
+  (match* router (re-seq #"[^/]+" uri)))
 
 (defn response [request resource]
   (let [method  (:method request)
         handler (-> resource method :handler)]
     (cond
-      (= :options method) (options  resource)
+      (= :OPTIONS method) (options  resource)
       (fn? handler)       (handler request)
       (not handler)       (:not-found http))))
 
@@ -41,7 +41,6 @@
   [routes]
   (fn [request]
     (response request (match routes (:uri request)))))
-
 
 ;;[GET]  curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/pin
 ;;[POST] curl -X POST http://localhost:8080/post -d '{"variable": "value"}'

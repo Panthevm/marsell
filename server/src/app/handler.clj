@@ -7,15 +7,14 @@
              [user       :as user])))
 
 (def routing
-  {"categories" {:get    {:handler (partial action/-get    categories/table)}
-                 :post   {:handler (partial action/-post   categories/table)}
-                 :delete {:handler (partial action/-delete categories/table)}}
-   "login" {:post {:handler auth/login}}
-   "pin"   {:get  {:handler (fn [s] {:status 200 :body {:foo "pong"}})}}
-   "post"  {:post {:handler (fn [s]
-                              (prn s)
+  {"categories" {:GET    {:handler (partial action/-get    categories/table)}
+                 :POST   {:handler (partial action/-post   categories/table)}
+                 :DELETE {:handler (partial action/-delete categories/table)}}
+   "login" {:POST {:handler auth/login}}
+   "pin"   {:GET  {:handler (fn [s] {:status 200 :body {:foo "pong"}})}}
+   "post"  {:POST {:handler (fn [s]
                               {:status 200 :body {:msg "post"}})}}
-   "join"  {:post {:handler auth/join}}})
+   "join"  {:POST {:handler auth/join}}})
 
 (def handler
   (handler/routing routing))

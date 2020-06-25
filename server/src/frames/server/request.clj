@@ -1,12 +1,6 @@
 (ns frames.server.request
   (:require [clojure.string :as str]))
 
-(def ^:const method-map
-  {"GET"     :get
-   "POST"    :post
-   "DELETE"  :delete
-   "OPTIONS" :options})
-
 (defn- read-type
   [reader]
   (str/split (.readLine reader) #" " 3))
@@ -40,7 +34,7 @@
         [uri query-string]   (read-uri    uri)
         headers              (read-header reader)
         body                 (read-body   reader headers)]
-    {:method       (get method-map method)
+    {:method       (keyword method)
      :version      version
      :uri          uri
      :headers      headers
