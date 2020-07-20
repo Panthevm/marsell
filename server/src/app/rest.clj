@@ -9,6 +9,7 @@
 (defn -main [& args]
   (let [db    db/connect
         stack (-> #'handler/handler
+                  middleware/allow-options
                   (middleware/add-db db)
                   middleware/wrap-json-body
                   middleware/wrap-cors

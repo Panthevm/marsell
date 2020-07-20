@@ -1,5 +1,7 @@
 (ns app.middleware
-  (:require [cheshire.core  :as ch]))
+  (:require [cheshire.core       :as ch]
+            [clojure.string      :as str]
+            [frames.routing.core :as routing]))
 
 (defn add-db
   [handler db]
@@ -26,3 +28,14 @@
   (fn [request]
     (-> (handler request)
         (update :body ch/generate-string))))
+
+(defn allow-options
+  [handler]
+  (letfn [(allow [response]
+            (->> response :resource
+                 (map (comp name first))
+                 (str/join ",")
+                 (assoc-in response [:headers "Allow"])))]
+    (fn [request]
+      (cond-> (handler request)
+        (= :OPTIONS (:method request)) allow))))

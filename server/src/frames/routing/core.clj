@@ -1,24 +1,5 @@
 (ns frames.routing.core)
 
-(def ^:const http-methods
-  {:get "GET" :post "POST" :delete "DELETE"})
-
-(def ^:const http
-  {:not-found {:status 404 :body {:msg "Resource not found"}}
-   :ok        {:status 200}})
-
-(defn options
-  [resource]
-  (letfn [(allow-methods [resource]
-            (->> resource
-             (reduce
-              (fn [acc [k]]
-                (str acc (name k) ","))
-              "")
-             drop-last (apply str)))]
-    (-> (:ok http)
-        (assoc-in [:headers "Allow"] (allow-methods resource)))))
-
 (defn match*
   [node [current & other :as path]]
   (cond (get node current)               (recur (get node current) other)
@@ -29,13 +10,14 @@
   [router uri]
   (match* router (re-seq #"[^/]+" uri)))
 
-(defn response [request resource]
+(defn response
+  [request resource]
   (let [method  (:method request)
         handler (-> resource method :handler)]
     (cond
-      (= :OPTIONS method) (options  resource)
+      (= :OPTIONS method) {:status 200 :resource resource}
       (fn? handler)       (handler request)
-      (not handler)       (:not-found http))))
+      (not handler)       {:status 404 :body {:msg "Resource not found"}})))
 
 (defn routing
   [routes]
