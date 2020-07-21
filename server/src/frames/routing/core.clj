@@ -11,20 +11,19 @@
   (match* router (re-seq #"[^/]+" uri)))
 
 (defn response
-  [request resource]
+  [request resource options]
   (let [method  (:method request)
         handler (-> resource method :handler)]
     (cond
-      (= :OPTIONS method) {:status 200 :resource resource}
+      (= :OPTIONS method) resource
       (fn? handler)       (handler request)
-      (not handler)       {:status 404 :body {:msg "Resource not found"}})))
+      (not handler)       (:not-found options))))
 
 (defn routing
-  [routes]
+  [routes options]
   (fn [request]
-    (response request (match routes (:uri request)))))
+    (response request (match routes (:uri request)) options)))
 
 ;;[GET]  curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/pin
 ;;[POST] curl -X POST http://localhost:8080/post -d '{"variable": "value"}'
-
-;; curl --output /dev/null --silent --write-out 'time_namelookup:  %{time_namelookup}s\n time_connect:  %{time_connect}s\n time_appconnect:  %{time_appconnect}s\n time_pretransfer:  %{time_pretransfer}s\n time_redirect:  %{time_redirect}s\n time_starttransfer:  %{time_starttransfer}s\n' http://localhost:8080/pin
+;;[TIME] curl --output /dev/null --silent --write-out 'time_namelookup:  %{time_namelookup}s\n time_connect:  %{time_connect}s\n time_appconnect:  %{time_appconnect}s\n time_pretransfer:  %{time_pretransfer}s\n time_redirect:  %{time_redirect}s\n time_starttransfer:  %{time_starttransfer}s\n' http://localhost:8080/pin

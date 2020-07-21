@@ -31,11 +31,12 @@
 
 (defn allow-options
   [handler]
-  (letfn [(allow [response]
-            (->> response :resource
-                 (map (comp name first))
-                 (str/join ",")
-                 (assoc-in response [:headers "Allow"])))]
+  (letfn [(allow [resource]
+            {:status  200
+             :headers {"Allow"
+                       (->> (select-keys resource [:GET :POST :DELETE])
+                            (map (comp name first))
+                            (str/join ","))}})]
     (fn [request]
       (cond-> (handler request)
         (= :OPTIONS (:method request)) allow))))

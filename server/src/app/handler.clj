@@ -17,4 +17,5 @@
    "join"  {:POST {:handler auth/join}}})
 
 (def handler
-  (handler/routing routing))
+  (handler/routing routing
+                   {:not-found {:status 404 :body {:message "Resource not found"}}}))

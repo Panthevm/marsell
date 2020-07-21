@@ -1,6 +1,6 @@
 #Repl
 back-repl:
-	cd server && rm -rf .cpcache/ && clj -A:nrepl
+	cd server && rm -rf .cpcache/ && clj -A:test:nrepl
 
 #Run
 back-run:
@@ -16,3 +16,8 @@ docker-up:
 
 docker-down:
 	docker-compose down
+
+#Test
+back-test:
+	cd server && clj -A:test:kaocha
+
