@@ -24,8 +24,8 @@
 
 (rfp/reg-event-fx
  ::initialize
- (fn [{db :db}]
-   {:db (assoc db :config config)
+ (fn [{:keys [db]}]
+   {:db                  (assoc db :config config)
     :frames.routing/init routes/routes}))
 
 (defn content [page params]
@@ -39,22 +39,9 @@
       (let [page   (->> @route :match (get @page/pages))
             params (->> @route :params)]
         [:<>
-         [:button {:on-click #(rfp/dispatch {:id ::db :params :reg-event-db})} "event-db"]
-         [:button {:on-click #(rfp/dispatch {:id ::fx})}                       "event-fx"]
          [navbar/component]
          [content page params]]))))
 
 (defn ^:export mount []
   (rfp/dispatch-sync {:id ::initialize})
   (dom/render [current-page] (js/document.getElementById "app")))
-
-(do ;test
-  (rfp/reg-event-db
-   ::db
-   (fn [{:keys [db params]}]
-     (assoc db :type params)))
-
-  (rfp/reg-event-fx
-   ::fx
-   (fn [{:keys [params]}]
-     {::rfp/dispatch {:id ::db :params :reg-event-fx}})))
