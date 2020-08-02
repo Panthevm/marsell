@@ -18,4 +18,7 @@
   :kaocha {:extra-deps  {lambdaisland/kaocha {:mvn/version "1.0-612"}}
            :extra-paths ["test"]
            :jvm-opts    ^:replace ["-XX:-OmitStackTraceInFastThrow"]
-           :main-opts   ["-m" "kaocha.runner" "--config-file" "test/test.edn"]}}}
+           :main-opts   ["-m" "kaocha.runner" "--config-file" "test/test.edn"]}
+
+  :uberjar {:extra-deps {uberdeps {:mvn/version "0.1.10"}}
+            :main-opts ["-m" "uberdeps.uberjar" "--target" "target/cdeps-0.1.0.jar"]}}}

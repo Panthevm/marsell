@@ -3,8 +3,8 @@
             [app.migration      :as migration]
             [app.db             :as db]
             [app.middleware     :as middleware]
-            [app.handler        :as handler]))
-
+            [app.handler        :as handler])
+  (:gen-class))
 
 (defn -main [& args]
   (let [db    db/connect
@@ -15,4 +15,8 @@
                   middleware/wrap-cors
                   middleware/wrap-edn-body)]
     (migration/migration db)
-    (server/run stack {:port 8080})))
+    (def server
+      (server/run stack {:port 8080}))))
+
+(comment
+  (.close server))
