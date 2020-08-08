@@ -14,7 +14,6 @@
   (migrate db categories/table))
 
 (comment
-  (pg/drop-table (db/connect) categories/table))
-
-(pg/create db/connect categories/table {:resource {:type "1"
-                                                   :name "@"}})
+  (pg/drop-table (db/connect) categories/table)
+  (pg/create db/connect categories/table {:resource {:type "1"
+                                                     :name "@"}}))

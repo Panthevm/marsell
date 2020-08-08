@@ -2,8 +2,7 @@
   (:require [clojure.java.io :as io]
             [frames.server.request :as request]
             [frames.server.response :as response])
-  (:import  [java.net ServerSocket Socket]
-            [java.util.concurrent Executors]))
+  (:import  [java.net ServerSocket]))
 
 (defn- read-request
   [handler reader]
@@ -12,7 +11,7 @@
        (handler)
        (response/make)))
 
-(defn- write-response
+(defn write-response
   [response writer]
   (.write writer response)
   (.flush writer))

@@ -8,8 +8,8 @@ ubuild:
 sbuild:
   cd server && clj -A:uberjar
 
-sjar:
-  cd server && java -cp target/cdeps-0.1.0.jar clojure.main -m app.rest
+#sjar:
+ # cd server && java -cp target/cdeps-0.1.0.jar clojure.main -m app.rest
 
 srun:
 	cd server && clj -m app.rest
