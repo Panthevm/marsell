@@ -11,17 +11,76 @@
   (sut/write-response message (io/writer socket)))
 
 (defn read-lines
-  "Read all the lines currently loaded into the input stream of a socket."
   [socket]
   (line-seq (io/reader socket)))
 
 (deftest server-core-test
-  (with-open [server-socket (sut/run (fn [s] {:status 200
-                                              :headers {"a" 1}
-                                              :body "123"})
-                              {:port 3000})
-              socket        (Socket. "localhost" (.getLocalPort server-socket))]
-    (write-to socket "GET /pin HTTP/1.1\nHost: localhost\n\n")
-    (matcho/match (read-lines socket)
-                  ["HTTP/1.1 200 OK" "a: 1" "Content-Length: 3" "" "123"] )))
+  (with-open [server-socket (sut/run (fn [request]
+                                       (prn request)
+                                       {:status  200
+                                        :headers {"Header" "Test"
+                                                  "Header2" "Test2"}
+                                        :body    (str request)})
+                              {:port 3000})]
+
+    (testing "GET"
+      (with-open [socket (Socket. "localhost" (.getLocalPort server-socket))]
+        (write-to socket
+                  (str "GET /get?foo=bar&baz=zaz HTTP/1.1\n"
+                       "Host: localhost\n"
+                       "\n"))
+        (matcho/match (read-lines socket)
+                      ["HTTP/1.1 200 OK"
+                       "Header: Test"
+                       "Header2: Test2"
+                       "Content-Length: 123"
+                       ""
+                       (str
+                        {:method       :GET
+                         :version      "HTTP/1.1"
+                         :uri          "/get"
+                         :headers      {"Host" "localhost"}
+                         :query-string "foo=bar&baz=zaz"
+                         :body         nil})])))
+
+    (testing "POST"
+      (with-open [socket (Socket. "localhost" (.getLocalPort server-socket))]
+        (write-to socket (str "POST /post HTTP/1.1\n"
+                              "Host: localhost\n"
+                              "Content-Length: 4\n"
+                              "\n"
+                              "body"))
+        (matcho/match (read-lines socket)
+                      ["HTTP/1.1 200 OK"
+                       "Header: Test"
+                       "Header2: Test2"
+                       "Content-Length: 136"
+                       ""
+                       (str
+                        {:method       :POST
+                         :version      "HTTP/1.1"
+                         :uri          "/post"
+                         :headers      {"Host"           "localhost"
+                                        "Content-Length" "4"}
+                         :query-string nil
+                         :body         "body"})])))
+
+    (testing "OPTIONS"
+      (with-open [socket (Socket. "localhost" (.getLocalPort server-socket))]
+        (write-to socket (str "OPTIONS /options HTTP/1.1\n"
+                              "Host: localhost\n"
+                              "\n"))
+        (matcho/match (read-lines socket)
+                      ["HTTP/1.1 200 OK"
+                       "Header: Test"
+                       "Header2: Test2"
+                       "Content-Length: 117"
+                       ""
+                       (str
+                        {:method       :OPTIONS
+                         :version      "HTTP/1.1"
+                         :uri          "/options"
+                         :headers      {"Host" "localhost"}
+                         :query-string nil
+                         :body         nil})])))))
 
