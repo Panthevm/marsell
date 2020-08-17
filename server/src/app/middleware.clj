@@ -1,19 +1,14 @@
 (ns app.middleware
-  (:require [cheshire.core       :as ch]
+  (:require [clojure.data.json   :as json]
             [clojure.string      :as str]
             [frames.routing.core :as routing]))
-
-(defn add-db
-  [handler db]
-  (fn [req]
-    (handler (assoc req :db db))))
 
 (defn wrap-json-body
   [handler]
   (fn [request]
     (handler
      (cond-> request
-       (:body request) (update :body #(ch/parse-string % keyword))))))
+       (:body request) (update :body #(json/read-str % keyword))))))
 
 (defn wrap-cors
   [handler]
@@ -27,7 +22,7 @@
   [handler]
   (fn [request]
     (-> (handler request)
-        (update :body ch/generate-string))))
+        (update :body json/write-str))))
 
 (defn allow-options
   [handler]

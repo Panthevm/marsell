@@ -1,8 +1,7 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure       {:mvn/version "RELEASE"}
-         org.postgresql/postgresql {:mvn/version "RELEASE"}
-         com.fzakaria/slf4j-timbre {:mvn/version "RELEASE"}
-         cheshire                  {:mvn/version "RELEASE"}}
+         org.clojure/data.json     {:mvn/version "RELEASE"}}
+
  :aliases
  {:nrepl  {:extra-deps {cider/cider-nrepl {:mvn/version "RELEASE"}}
            :main-opts  ["-m"           "nrepl.cmdline"
