@@ -8,11 +8,11 @@ ubuild:
 sbuild:
   cd server && clj -A:uberjar
 
-#sjar:
- # cd server && java -cp target/cdeps-0.1.0.jar clojure.main -m app.rest
+sgraph:
+		cd server && clj -A:graph -o deps.png --size
 
 srun:
-	cd server && clj -m app.rest
+	cd server && clj -m app.core
 
 srepl:
 	cd server && rm -rf .cpcache/ && clj -A:test:nrepl
