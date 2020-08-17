@@ -12,7 +12,9 @@
                 'var    {:GET     {:handler (fn [request] (:params request))}
                          "nested" {:GET {:handler (fn [request] "nested")}
                                    'id  {:GET {:handler (fn [request] (:params request))}}}}}}
-   {:not-found {:status 404 :body {:message "Resource not found"}}}))
+   {:not-found (fn [request]
+                 {:status 404
+                  :body {:message (str  "Resource " (:uri request) " not found")}})}))
 
 (deftest routing-core-test
 
@@ -29,11 +31,6 @@
                             "nested" {:GET {:handler fn?}
                                       'id  {:GET {:handler fn?}}}}}))
 
-  (testing "options"
-    (testing "not-found"
-      (matcho/match (routing {:uri "/not-found" :method :GET})
-                    {:status 404 :body {:message "Resource not found"}})))
-
   (testing "params"
     (matcho/match (routing {:uri "/resource/child"    :method :GET})   "child")
     (matcho/match (routing {:uri "/resource/1"        :method :GET})   {:var "1"})
@@ -41,5 +38,5 @@
     (matcho/match (routing {:uri "/resource/1/nested/2" :method :GET}) {:var "1" :id "2"}))
 
   (testing "not-found"
-    (matcho/match (routing {:uri "/foo"    :method :GET}) {:status 404 :body {:message "Resource not found"}})
-    (matcho/match (routing {:uri "/foo/bar":method :GET}) {:status 404 :body {:message "Resource not found"}})))
+    (matcho/match (routing {:uri "/foo"    :method :GET}) {:status 404 :body {:message "Resource /foo not found"}})
+    (matcho/match (routing {:uri "/foo/bar":method :GET}) {:status 404 :body {:message "Resource /foo/bar not found"}})))

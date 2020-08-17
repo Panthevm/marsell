@@ -19,12 +19,14 @@
 
 (defn response
   [request [resource params] options]
-  (let [method  (:method request)
-        handler (-> resource method :handler)]
+  (let [method    (:method request)
+        handler   (-> resource method :handler)
+        not-found (:not-found options)]
     (cond
       (= :OPTIONS method) resource
       (fn? handler)       (handler (assoc request :params params))
-      (not handler)       (:not-found options))))
+      (not handler)       (not-found request))))
+
 
 (defn routing
   [routes options]
