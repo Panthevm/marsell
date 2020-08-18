@@ -1,6 +1,7 @@
 (ns frames.server.core
-  (:require [clojure.java.io :as io]
-            [frames.server.request :as request]
+  (:require [clojure.java.io        :as io]
+            [clojure.tools.logging  :as logg]
+            [frames.server.request  :as request]
             [frames.server.response :as response])
   (:import  [java.net ServerSocket]))
 
@@ -28,6 +29,7 @@
 (defn run
   [handler options]
   (let [server-socket (ServerSocket. (:port options))]
+    (logg/info "Server started on port" (:port options))
     (future
       (loop []
         (handle-client handler server-socket)

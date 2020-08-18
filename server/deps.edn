@@ -1,6 +1,9 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure       {:mvn/version "RELEASE"}
-         org.clojure/data.json     {:mvn/version "RELEASE"}}
+         org.clojure/data.json     {:mvn/version "RELEASE"}
+         org.clojure/java.jdbc     {:mvn/version "RELEASE"}
+         org.clojure/tools.logging {:mvn/version "RELEASE"}
+         org.postgresql/postgresql {:mvn/version "RELEASE"}}
 
  :aliases
  {:nrepl  {:extra-deps {cider/cider-nrepl {:mvn/version "RELEASE"}}

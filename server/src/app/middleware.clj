@@ -35,3 +35,10 @@
     (fn [request]
       (cond-> (handler request)
         (= :OPTIONS (:method request)) allow))))
+
+(defn add-context
+  [handler manifest]
+  (fn [request]
+    (handler (assoc request :context manifest))))
+
+

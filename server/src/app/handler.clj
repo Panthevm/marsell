@@ -2,7 +2,7 @@
   (:require [frames.routing.core :as handler]))
 
 (def routing
-  {"pin"   {:GET  {:handler (fn [s] {:status 200 :body {:foo "pong"}})}}
+  {"ping"  {:GET  {:handler (fn [request] {:status 200 :body request})}}
    "post"  {:POST {:handler (fn [s]
                               {:status 200 :body {:msg "post"}})}}})
 

@@ -1,5 +1,6 @@
 (ns frames.server.request
-  (:require [clojure.string :as str]))
+  (:require [clojure.string        :as str]
+            [clojure.tools.logging :as logg]))
 
 (defn- read-type
   [reader]
@@ -34,6 +35,7 @@
         [uri query-string]   (read-uri    uri)
         headers              (read-header reader)
         body                 (read-body   reader headers)]
+    (logg/info "Request:" method uri query-string headers)
     {:method       (keyword method)
      :version      version
      :uri          uri
