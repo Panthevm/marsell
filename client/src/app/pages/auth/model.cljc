@@ -14,7 +14,7 @@
 (rf/reg-event-fx
  ::login
  (fn [_ [_ form]]
-   {:json/fetch {:uri     "/login"
+   {:json/fetch {:uri     "/person"
                  :method  "POST"
                  :body    form
                  :success {:event ::success-login}}}))
@@ -22,4 +22,5 @@
 (rf/reg-event-fx
  ::success-login
  (fn [{db :db} [_ response]]
-   {:db (assoc-in db [:config :token] (:token response))}))
+   (prn response)
+   #_{:db (assoc-in db [:config :token] (:token response))}))

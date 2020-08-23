@@ -13,8 +13,9 @@
 
 (defn wrap-edn-body
   [response]
-  (-> response
-      (update :body json/write-str)))
+  (cond-> response
+    (:body response)
+    (update :body json/write-str)))
 
 (defn wrap-json-body
   [handler]
@@ -24,20 +25,7 @@
                 (fn [body]
                   (some-> body (json/read-str :key-fn keyword)))))))
 
-(defn allow-options
-  [handler]
-  (letfn [(allow [resource]
-            {:status  200
-             :headers {"Allow"
-                       (->> (select-keys resource [:GET :POST :DELETE])
-                            (map (comp name first))
-                            (str/join ","))}})]
-    (fn [data]
-      (cond-> (handler data)
-        (= :OPTIONS (-> data :request :method))
-        (update :request allow)))))
-
 (defn add-context
-  [handler manifest]
+  [handler options]
   (fn [request]
-    (handler {:request request :context manifest})))
+    (handler (assoc options :request request))))

@@ -4,8 +4,8 @@
 
 (def ^:const path [:form ::path])
 (def ^:const schema
-  {:type :form
-   :fields {:email            {:type :string}
+  {:type   :form
+   :fields {:username         {:type :string}
             :password         {:type :string}
             :confirm-password {:type :string}}})
 

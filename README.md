@@ -1,7 +1,5 @@
 # Web application `WIP`
 
-> Application with minimal dependencies
-
 
 ## SERVER
 

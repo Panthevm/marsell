@@ -4,7 +4,8 @@
             [app.action.person   :as person]))
 
 (def routing
-  {"ping"   {:GET  {:handler (fn [request] {:status 200 :body request})}}
+  {"ping"   {:GET  {:handler (fn [request]
+                               {:status 200 :body (str request)})}}
    "person" {:POST {:handler person/create}}})
 
 (defn match-routing
@@ -12,4 +13,6 @@
   (fn [data]
     (handler
      (handler/routing data routing
-                      {:not-found {:status 404 :body {:message "Resource not found"}}}))))
+                      {:not-found (fn [request]
+                                    {:status 400
+                                     :body {:message (str  "Resource " (:uri request) " not found")}})}))))

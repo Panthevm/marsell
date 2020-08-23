@@ -9,14 +9,13 @@
   (letfn [(create []
             (rf/dispatch [::form/eval {:success {:event ::model/login}}]))]
     [:div.text-center
-     [:button.btn.black.my {:on-click create} "Войти"]
-     [:a.muted.my          {:href "#/login"}  "Регистрация"]]))
+     [:button.btn.black.my {:on-click create} "Зарегистрироваться"]]))
 
 (defn form []
   [:form
-   [:h1.text-center.px "Авторизаця"]
+   [:h1.text-center.px "Регистрация"]
    [:label "Email"]
-   [inputs/input form/path [:email]]
+   [inputs/input form/path [:username]]
    [:label "Пароль"]
    [inputs/input form/path [:password]]])
 

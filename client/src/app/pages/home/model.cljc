@@ -7,7 +7,7 @@
  index-page
  (fn [_ [_ hook]]
    (condp = hook
-     :init {:json/fetch {:uri     "/pin"
+     :init {:json/fetch {:uri     "/ping"
                          :method  "get"
                          :success {:event ::success}}}
      nil)))
