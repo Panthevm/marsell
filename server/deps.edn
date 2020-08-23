@@ -2,11 +2,13 @@
  :deps  {org.clojure/clojure       {:mvn/version "RELEASE"}
          ;;parse
          org.clojure/data.json     {:mvn/version "RELEASE"}
+
          ;;database
          org.clojure/java.jdbc     {:mvn/version "RELEASE"}
          org.postgresql/postgresql {:mvn/version "RELEASE"}
          com.zaxxer/HikariCP       {:mvn/version "RELEASE"}
          ;;logg
+         org.clojure/tools.logging {:mvn/version "RELEASE"}
          org.slf4j/slf4j-simple    {:mvn/version "RELEASE"}}
 
  :aliases

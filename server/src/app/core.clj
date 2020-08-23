@@ -7,16 +7,18 @@
             [app.manifest       :as manifest])
   (:gen-class))
 
+(defonce datasource
+  (delay (pool/create-pool (-> manifest/manifest :database :datasource))))
+
 (defn -main [& args]
-  (let [db    (pool/db (-> manifest/manifest :database :datasource))
-        stack (->
+  (let [stack (->
                middleware/wrap-edn-body
                middleware/wrap-cors
                handler/match-routing
                middleware/wrap-json-body
                (middleware/add-context
-                {:db-connection db :manifest manifest/manifest}))]
-    (migration/migration manifest/manifest db)
+                {:datasource datasource :manifest manifest/manifest}))]
+    (migration/migration manifest/manifest datasource)
     (def server
       (server/run stack {:port 8080}))))
 

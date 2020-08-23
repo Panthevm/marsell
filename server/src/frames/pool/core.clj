@@ -34,14 +34,3 @@
     (-> props
         HikariConfig.
         HikariDataSource.)))
-
-(defn close-pool
-  [datasource]
-  (.close datasource))
-
-(defonce pool (atom nil))
-
-(defn db [options]
-  (if-let [p @pool]
-    p
-    (reset! pool {:datasource (create-pool options)})))
