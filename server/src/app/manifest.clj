@@ -7,8 +7,15 @@
              [:password "VARCHAR(32)"                    "NOT NULL"]
              [:resource "VARCHAR(32)" "DEFAULT 'person'" "NOT NULL"]]}
 
-   :database {:datasource {:idle-timeout        10000
-                           :minimum-idle        1
-                           :maximum-pool-size   1
-                           :connection-init-sql "select 1"
-                           :data-source.url     "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified"}}})
+   :database {:datasource {:connectionInitSql "select 1"
+                           :autoCommit        true
+                           :readOnly          false
+                           :connectionTimeout 30000
+                           :validationTimeout 5000
+                           :idleTimeout       600000
+                           :maxLifetime       1800000
+                           :minimumIdle       10
+                           :maximumPoolSize  10
+                           :registerMbeans    false
+                           :dataSourceClassName "org.postgresql.ds.PGSimpleDataSource"
+                           :dataSource.Url     "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified"}}})
