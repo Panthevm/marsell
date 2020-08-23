@@ -22,5 +22,6 @@
            :jvm-opts    ^:replace ["-XX:-OmitStackTraceInFastThrow"]
            :main-opts   ["-m" "kaocha.runner" "--config-file" "test/test.edn"]}
 
-  :uberjar {:extra-deps {uberdeps {:mvn/version "0.1.10"}}
-            :main-opts ["-m" "uberdeps.uberjar" "--target" "target/cdeps-0.1.0.jar"]}}}
+  :uberjar {:extra-deps {uberdeps {:mvn/version "RELEASE"}}
+            :main-opts ["-m"           "uberdeps.uberjar"
+                        "--main-class" "app.core"]}}}

@@ -2,9 +2,9 @@
 
 (def manifest
   {:resources
-   {:user [[:id       "SERIAL"                     "PRIMARY KEY"]
-           [:username "VARCHAR(32)"                "PRIMARY KEY"]
-           [:password "VARCHAR(32)"                "PRIMARY KEY"]
-           [:resource "VARCHAR(32)" "DEFAULT user" "PRIMARY KEY"]]}
+   {:person [[:id       "SERIAL"                         "PRIMARY KEY"]
+             [:username "VARCHAR(32)"                    "NOT NULL"]
+             [:password "VARCHAR(32)"                    "NOT NULL"]
+             [:resource "VARCHAR(32)" "DEFAULT 'person'" "NOT NULL"]]}
 
-   :database {:main {:connection "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified"}}})
+   :database {:connection "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified"}})

@@ -18,21 +18,20 @@
   (match* router (re-seq #"[^/]+" uri) {}))
 
 (defn response
-  [request [resource params] options]
+  [{request :request :as data} [resource params] options]
   (let [method    (:method request)
         handler   (-> resource method :handler)
         not-found (:not-found options)]
     (cond
       (= :OPTIONS method) resource
-      (fn? handler)       (handler (assoc request :params params))
-      (not handler)       (not-found request))))
+      (fn? handler)       (handler   (update data :request assoc :params params))
+      (not handler)       (not-found data))))
 
 
 (defn routing
-  [routes options]
-  (fn [request]
-    (response request (match routes (:uri request)) options)))
+  [{request :request :as data} routes options]
+  (response data (match routes (:uri request)) options))
 
 ;;[GET]  curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/ping
 ;;[POST] curl -X POST http://localhost:8080/post -d '{"variable": "value"}'
-;;[TIME] curl --output /dev/null --silent --write-out 'time_namelookup:  %{time_namelookup}s\n time_connect:  %{time_connect}s\n time_appconnect:  %{time_appconnect}s\n time_pretransfer:  %{time_pretransfer}s\n time_redirect:  %{time_redirect}s\n time_starttransfer:  %{time_starttransfer}s\n' http://localhost:8080/pin
+;;[TIME] curl --output /dev/null --silent --write-out 'time_namelookup:  %{time_namelookup}s\n time_connect:  %{time_connect}s\n time_appconnect:  %{time_appconnect}s\n time_pretransfer:  %{time_pretransfer}s\n time_redirect:  %{time_redirect}s\n time_starttransfer:  %{time_starttransfer}s\n' http://localhost:8080/ping

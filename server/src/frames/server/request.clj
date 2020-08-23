@@ -35,7 +35,7 @@
         [uri query-string]   (read-uri    uri)
         headers              (read-header reader)
         body                 (read-body   reader headers)]
-    (logg/info "Request:" method uri query-string headers)
+    (logg/info "Request:" method uri query-string headers body)
     {:method       (keyword method)
      :version      version
      :uri          uri

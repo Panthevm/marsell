@@ -5,7 +5,8 @@
   "\r\n")
 
 (def ^:const response-reasons
-  {200 "OK"})
+  {200 "OK"
+   400 "Bad Request"})
 
 (defn- make-status
   [status]

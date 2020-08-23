@@ -7,12 +7,13 @@
   (:gen-class))
 
 (defn -main [& args]
-  (let [stack (-> #'handler/handler
-                  middleware/allow-options
-                  (middleware/add-context manifest/manifest)
-                  middleware/wrap-json-body
-                  middleware/wrap-cors
-                  middleware/wrap-edn-body)]
+  (let [stack (->
+               middleware/wrap-edn-body
+               middleware/wrap-cors
+               handler/match-routing
+               middleware/allow-options
+               middleware/wrap-json-body
+               (middleware/add-context manifest/manifest))]
     (migration/migration manifest/manifest)
     (def server
       (server/run stack {:port 8080}))))

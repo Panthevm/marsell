@@ -21,6 +21,6 @@
 
 (defn migration [manifest]
   (logg/info "Run migration")
-  (let [main-connection (-> manifest :database :main :connection)]
+  (let [main-connection (-> manifest :database :connection)]
     (doseq [table (:resources manifest)]
       (table-migration main-connection table))))

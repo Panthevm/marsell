@@ -3,26 +3,26 @@
             [clojure.string      :as str]
             [frames.routing.core :as routing]))
 
-(defn wrap-json-body
-  [handler]
-  (fn [request]
-    (handler
-     (cond-> request
-       (:body request) (update :body #(json/read-str % keyword))))))
-
 (defn wrap-cors
   [handler]
-  (fn [request]
-    (-> (handler request)
+  (fn [data]
+    (-> (handler data)
         (assoc-in [:headers "Access-Control-Allow-Origin"]  "*")
         (assoc-in [:headers "Access-Control-Allow-Methods"] "GET,PUT,POST,DELETE")
         (assoc-in [:headers "Access-Control-Allow-Headers"] "X-Requested-With,Content-Type,Cache-Control,Origin,Accept,Authorization"))))
 
 (defn wrap-edn-body
+  [response]
+  (-> response
+      (update :body json/write-str)))
+
+(defn wrap-json-body
   [handler]
-  (fn [request]
-    (-> (handler request)
-        (update :body json/write-str))))
+  (fn [data]
+    (handler
+     (update-in data [:request :body]
+                (fn [body]
+                  (some-> body (json/read-str :key-fn keyword)))))))
 
 (defn allow-options
   [handler]
@@ -32,13 +32,12 @@
                        (->> (select-keys resource [:GET :POST :DELETE])
                             (map (comp name first))
                             (str/join ","))}})]
-    (fn [request]
-      (cond-> (handler request)
-        (= :OPTIONS (:method request)) allow))))
+    (fn [data]
+      (cond-> (handler data)
+        (= :OPTIONS (-> data :request :method))
+        (update :request allow)))))
 
 (defn add-context
   [handler manifest]
   (fn [request]
-    (handler (assoc request :context manifest))))
-
-
+    (handler {:request request :context manifest})))
