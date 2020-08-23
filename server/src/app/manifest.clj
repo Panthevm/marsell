@@ -7,8 +7,8 @@
              [:password "VARCHAR(32)"                    "NOT NULL"]
              [:resource "VARCHAR(32)" "DEFAULT 'person'" "NOT NULL"]]}
 
-   :database {:datasource {:idle-timeout       10000
+   :database {:datasource {:idle-timeout        10000
                            :minimum-idle        1
-                           :maximum-pool-size   3
+                           :maximum-pool-size   1
                            :connection-init-sql "select 1"
                            :data-source.url     "jdbc:postgresql://localhost:5432/marsell?user=panthevm&stringtype=unspecified"}}})

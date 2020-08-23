@@ -29,3 +29,11 @@
   [handler options]
   (fn [request]
     (handler (assoc options :request request))))
+
+(defn allow-options
+  [handler]
+  (fn [request]
+    (cond
+      (= :OPTIONS (:method request))
+      {:status 200 :headers {"Allow" "GET,POST,DELETE"}}
+      :else (handler request))))

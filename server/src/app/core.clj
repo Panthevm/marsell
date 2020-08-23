@@ -13,11 +13,12 @@
 (defn -main [& args]
   (let [stack (->
                middleware/wrap-edn-body
-               middleware/wrap-cors
                handler/match-routing
                middleware/wrap-json-body
                (middleware/add-context
-                {:datasource datasource :manifest manifest/manifest}))]
+                {:datasource datasource :manifest manifest/manifest})
+               middleware/allow-options
+               middleware/wrap-cors)]
     (migration/migration manifest/manifest datasource)
     (def server
       (server/run stack {:port 8080}))))

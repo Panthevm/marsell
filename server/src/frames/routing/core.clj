@@ -1,13 +1,4 @@
-(ns frames.routing.core
-  (:require [clojure.string :as string]))
-
-(defn allow-options
-  [resource]
-  {:status  200
-   :headers {"Allow"
-             (->> (select-keys resource [:GET :POST :DELETE])
-                  (map (comp name first))
-                  (string/join ","))}})
+(ns frames.routing.core)
 
 (defn match*
   [current-node [current-path & other :as path] params]
@@ -28,13 +19,12 @@
 
 (defn response
   [{request :request :as data} [resource params] options]
-  (let [method    (:method request)
+  (let [method    (-> request :method)
         handler   (-> resource method :handler)
-        not-found (:not-found options)]
+        not-found (-> options :not-found)]
     (cond
-      (= :OPTIONS method) (allow-options   resource)
-      (fn? handler)       (handler (update data :request assoc :params params))
-      (not handler)       (not-found request))))
+      (fn? handler) (handler (update data :request assoc :params params))
+      :else         (not-found request))))
 
 
 (defn routing
