@@ -28,8 +28,9 @@
 
 
 (defn routing
-  [{request :request :as data} routes options]
-  (response data (match routes (:uri request)) options))
+  [routes options]
+  (fn [{request :request :as data}]
+    (response data (match routes (:uri request)) options)))
 
 ;;[GET]  curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:8080/ping
 ;;[POST] curl -X POST http://localhost:8080/post -d '{"variable": "value"}'

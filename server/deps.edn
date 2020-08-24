@@ -1,8 +1,5 @@
 {:paths ["src"]
  :deps  {org.clojure/clojure       {:mvn/version "RELEASE"}
-         ;;parse
-         org.clojure/data.json     {:mvn/version "RELEASE"}
-
          ;;database
          org.clojure/java.jdbc     {:mvn/version "RELEASE"}
          org.postgresql/postgresql {:mvn/version "RELEASE"}

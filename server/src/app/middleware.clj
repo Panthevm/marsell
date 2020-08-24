@@ -1,6 +1,6 @@
 (ns app.middleware
-  (:require [clojure.data.json   :as json]
-            [clojure.string      :as str]
+  (:require [clojure.string      :as str]
+            [clojure.edn         :as edn]
             [frames.routing.core :as routing]))
 
 (defn wrap-cors
@@ -12,18 +12,12 @@
         (assoc-in [:headers "Access-Control-Allow-Headers"] "X-Requested-With,Content-Type,Cache-Control,Origin,Accept,Authorization"))))
 
 (defn wrap-edn-body
-  [response]
-  (cond-> response
-    (:body response)
-    (update :body json/write-str)))
-
-(defn wrap-json-body
   [handler]
   (fn [data]
     (handler
      (update-in data [:request :body]
                 (fn [body]
-                  (some-> body (json/read-str :key-fn keyword)))))))
+                  (some-> body edn/read-string))))))
 
 (defn add-context
   [handler options]

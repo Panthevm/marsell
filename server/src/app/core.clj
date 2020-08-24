@@ -12,9 +12,8 @@
 
 (defn -main [& args]
   (let [stack (->
-               middleware/wrap-edn-body
                handler/match-routing
-               middleware/wrap-json-body
+               middleware/wrap-edn-body
                (middleware/add-context {:datasource datasource})
                middleware/allow-options
                middleware/wrap-cors)]

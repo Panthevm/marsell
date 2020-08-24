@@ -27,7 +27,8 @@
             (when data
               (let [bs (.getBytes data)]
                 (.write out bs 0 (alength bs)))))]
-    (let [out (ByteArrayOutputStream.)]
+    (let [out  (ByteArrayOutputStream.)
+          body (some-> body str)]
       (append out (make-status status))
       (append out empty-line)
       (append out (make-headers headers body))
