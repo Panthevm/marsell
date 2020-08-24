@@ -1,8 +1,7 @@
-{:paths ["src" "zenform/src" "re-frame/src"]
+{:paths ["src"]
  :deps  {org.clojure/clojurescript {:mvn/version "LATEST" :scope "provided"}
          reagent                   {:mvn/version "LATEST"}
-         re-frame                  {:mvn/version "LATEST"}
-         zenform                   {:local/root  "zenform"}}
+         re-frame                  {:mvn/version "LATEST"}}
 
 
  :aliases
