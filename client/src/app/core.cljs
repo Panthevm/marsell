@@ -7,12 +7,14 @@
             [frames.routing :as routing]
             ;;App
             [app.routes :as routes]
+            ;;Pages
+            [app.pages.auth.core]
             ;;Components
             [app.components.navbar.core     :as c-navbar]
             [app.components.breadcrumb.core :as c-breadcrumb]))
 
 
-(def ^:const config
+(def config
   {:base-url   "http://localhost:8080/"
    :client-url "http://localhost:3000/"})
 
@@ -20,16 +22,16 @@
  ::initialize
  (fn [{db :db} _]
    {:db                  (assoc db :config config)
-    :frames.routing/init routes/routes}))
+    :frames.routing/init {:params {:routes routes/routes}}}))
 
 (defn current-page []
-  (let [route (rf/subscribe [::routing/current])]
+  (let [route (rf/subscribe [::routing/current-route])]
     (fn []
-      (let [page   (->> @route :match (get @page/pages))
-            params (->> @route :params)]
+      (let [page (->> @route :id (get @page/pages))]
         [:div.bg-purple-900.h-screen
          [c-navbar/component]
-         [:div.container.mx-auto.shadow-2xl
+         (when page [page])
+         #_[:div.container.mx-auto.shadow-2xl
           [c-breadcrumb/component]
           [:div.bg-purple-500.my-1.rounded-b-lg
            [:h1.py-8.px-2 "Hello World"]]]]))))

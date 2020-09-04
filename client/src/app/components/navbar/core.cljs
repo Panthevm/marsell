@@ -2,7 +2,7 @@
 
 (defn component
   []
-  [:nav.bg-purple-700.p-6.sticky.top-0.rounded-b-lg
+  [:nav.bg-purple-700.p-3.sticky.top-0.rounded-b-lg
    [:div.container.mx-auto.flex.items-center.flex-wrap
     [:div.flex.items-center.flex-shrink-0.text-white.mr-6
      [:span.font-semibold.text-xl.tracking-tight "Marsell"]]
@@ -15,7 +15,7 @@
     [:div.w-full.block.flex-grow.lg:flex.lg:items-center.lg:w-auto
      [:div.text-sm.lg:flex-grow
       [:a.block.mt-4.lg:inline-block.lg:mt-0.text-white.hover:text-white.mr-4
-       {:href "#responsive-header"}
+       {:href "#/"}
        "Docs"]
       [:a.block.mt-4.lg:inline-block.lg:mt-0.text-white.hover:text-white.mr-4
        {:href "#responsive-header"}
@@ -25,5 +25,5 @@
        "Blog"]]
      [:div
       [:a.inline-block.text-sm.px-4.py-2.leading-none.border.rounded.text-white.border-white.mt-4.lg:mt-0
-       {:href "#"}
-       "Download"]]]]])
+       {:href "#/auth"}
+       "Авторизация"]]]]])

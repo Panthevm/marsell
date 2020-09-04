@@ -1,6 +1,8 @@
 ##UI
 ubuild:
 	cd client && clj -A:prod
+utest:
+	cd client && clj -A:test:kaocha
 ##SERVER
 sbuild:
   cd server && clj -A:uberjar
