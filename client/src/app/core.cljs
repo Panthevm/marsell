@@ -21,8 +21,10 @@
 (rf/reg-event-fx
  ::initialize
  (fn [{db :db} _]
-   {:db                  (assoc db :config config)
-    :frames.routing/init {:params {:routes routes/routes}}}))
+   {:db             (assoc db
+                           :config config
+                           :routes routes/routes)
+    ::routing/start {}}))
 
 (defn current-page []
   (let [route (rf/subscribe [::routing/current-route])]
@@ -30,11 +32,7 @@
       (let [page (->> @route :id (get @page/pages))]
         [:div.bg-purple-900.h-screen
          [c-navbar/component]
-         (when page [page])
-         #_[:div.container.mx-auto.shadow-2xl
-          [c-breadcrumb/component]
-          [:div.bg-purple-500.my-1.rounded-b-lg
-           [:h1.py-8.px-2 "Hello World"]]]]))))
+         (when page [page])]))))
 
 
 (defn ^:export mount []
