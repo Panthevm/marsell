@@ -3,7 +3,8 @@
 
 (defn *location-hash
   []
-  #?(:cljs (.. js/window -location -hash)))
+  #?(:cljs (.. js/window -location -hash)
+     :clj  "#/"))
 
 (defn- parse-search
   [search]
@@ -36,24 +37,39 @@
 (rf/reg-event-fx
  ::location-changed
  (fn [{db :db} [_ {:keys [params]}]]
-   (letfn [(add-event [opts event]
-             (update opts :dispatch-n conj event))]
-     (let [{id  :id params  :params :as new} (match (:routes params) (:location params))
-           {oid :id oparams :params :as old} (:routing db)]
-       (cond-> {:db (assoc db :routing new)}
-         (=    params oparams) (add-event [id  {:params (assoc new :phase :init)}])
-         (not= params oparams) (add-event [id  {:params (assoc new :phase :params)}])
-         (not= oid id)         (add-event [oid {:params (assoc new :phase :deinit)}]))))))
+   (let [{nid :id nparams :params :as new} (match (:routes db) (:location params))
+         {oid :id oparams :params :as old} (:routing db)]
+     {:db (assoc db :routing new)
+      :dispatch-n (cond
+                    (not oid)
+                    [[nid {:params (assoc new :phase :init)}]]
+
+                    (not= oid nid)
+                    [[oid {:params (assoc old :phase :deinit)}]
+                     [nid {:params (assoc new :phase :init)}]]
+
+                    (not= oparams nparams)
+                    [[nid {:params (assoc new :phase :params)}]])})))
 
 (rf/reg-fx
- ::init
+ ::start
  (letfn [(event [params]
            (rf/dispatch [::location-changed {:params params}]))]
    (fn [{:keys [params]}]
      #?(:cljs (aset js/window "onhashchange" #(event (assoc params :location (*location-hash)))))
      (event (assoc params :location (*location-hash))))))
 
+(rf/reg-event-db
+ ::init
+ (fn [db [_ {:keys [params]}]]
+   (assoc db :routes (:routes params))))
+
 (rf/reg-sub
  ::current-route
  (fn [db _]
    (:routing db)))
+
+(rf/reg-event-fx
+ ::redirect
+ (fn [_ [_ {:keys [params]}]]
+   {:dispatch [::location-changed {:params params}]}))

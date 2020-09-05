@@ -7,4 +7,7 @@
  :color?                      true
  :reporter                    [kaocha.report/dots]
  :plugins                     [:kaocha.plugin/filter
-                               :kaocha.plugin/capture-output]}
+                               :kaocha.plugin/capture-output]
+ :kaocha.plugin.randomize/randomize? false
+ :kaocha.plugin.profiling/profiling? false
+ }
