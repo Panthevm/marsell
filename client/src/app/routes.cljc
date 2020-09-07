@@ -2,4 +2,5 @@
 
 (def routes
   {:-      :app.pages.auth.model/foo
-   "auth"  {:- :app.pages.auth.model/page}})
+   "authorization" {:- :app.pages.auth.model/authorization}
+   "registration"  {:- :app.pages.auth.model/registration}})
