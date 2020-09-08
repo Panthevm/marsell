@@ -84,6 +84,11 @@
              (:value params))))
 
 (reframe/reg-sub
+ ::node
+ (fn [db [_ {:keys [params]}]]
+   (get-in db (node-path (:form-path params) (:path params)))))
+
+(reframe/reg-sub
  ::form
  (fn [db [_ {:keys [params]}]]
    (get-in db (:form-path params))))
