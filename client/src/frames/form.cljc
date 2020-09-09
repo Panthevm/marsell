@@ -1,52 +1,53 @@
 (ns frames.form
   "https://github.com/HealthSamurai/zenform"
-  (:refer-clojure :exclude [eval])
+  (:refer-clojure :exclude [import])
   (:require [re-frame.core :as reframe]))
 
-(defn init
-  [schema value]
-  (cond
-    (= :form (:type schema))
-    (update schema :value
-            (partial reduce-kv
-                     (fn [accumulator node-name node-schema]
-                       (assoc accumulator node-name
-                              (init node-schema (get value node-name))))
-                     {}))
+(defmulti import (fn [schema _] (:type schema)))
 
-    (and (= :collection (:type schema))
-         value)
-    (assoc schema
-           :value
-           (reduce-kv
-            (fn [accumulator index item]
-              (assoc accumulator index
-                     (init (:value schema) item)))
-            {} value)
+(defmethod import :form
+  [node value]
+  (update node :value
+          (partial reduce-kv
+                   (fn [accumulator field-name field-schema]
+                     (assoc accumulator field-name
+                            (import field-schema (get value field-name))))
+                   {})))
 
-           :schema (:value schema))
+(defmethod import :collection
+  [node value]
+  (assoc node
+         :schema (:value node)
+         :value  (reduce-kv
+                  (fn [accumulator index item]
+                    (assoc accumulator index
+                           (import (:value node) item)))
+                  {} value)))
 
-    :else
-    (assoc schema :value value)))
+(defmethod import :default
+  [node value]
+  (assoc node :value value))
 
-(defn eval
+(defmulti export :type)
+
+(defmethod export :form
   [node]
-  (cond
-    (= :form (:type node))
-    (reduce-kv
-     (fn [accumulator node-name node-schema]
-       (assoc accumulator node-name
-              (eval node-schema)))
-     {} (:value node))
+  (reduce-kv
+   (fn [accumulator node-name node-schema]
+     (assoc accumulator node-name
+            (export node-schema)))
+   {} (:value node)))
 
-    (and (= :collection (:type node))
-         (not-empty (:value node)))
-    (reduce-kv
-     (fn [accumulator index node-schema]
-       (conj accumulator (eval node-schema)))
-     [] (:value node))
+(defmethod export :collection
+  [node]
+  (reduce-kv
+   (fn [accumulator index node-schema]
+     (conj accumulator (export node-schema)))
+   [] (:value node)))
 
-    :else (:value node)))
+(defmethod export :default
+  [node]
+  (:value node))
 
 (defn node-path
   [form-path path]
@@ -57,7 +58,7 @@
  ::init
  (fn [db [_ {:keys [params]}]]
    (assoc-in db (:form-path params)
-             (init (:form-schema params) (:data params)))))
+             (import (:form-schema params) (:data params)))))
 
 (reframe/reg-event-db
  ::add-collection-item
@@ -67,7 +68,7 @@
      (update-in db (node-path (:form-path params) (:path params))
                 (fn [node]
                   (assoc-in node [:value (next-index (:value node))]
-                            (init (:schema node) (:value params))))))))
+                            (import (:schema node) (:value params))))))))
 
 (reframe/reg-event-db
  ::remove-collection-item

@@ -27,9 +27,9 @@
       (let [page (->> @route :id (get @page/pages))]
         [:<>
          [c-flesh/component]
-         [:div.bg-purple-900.h-screen
+         [:div.bg-purple-900.pb-10.min-h-screen
           [c-navbar/component]
-          (when page [page])]]))))
+          (when page [page])]])))o
 
 
 (defn ^:export mount []
