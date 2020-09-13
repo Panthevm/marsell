@@ -7,8 +7,10 @@
 (def schema
   {:form-path   [:form ::path]
    :form-schema {:type  :form
-                 :value {:username         {:type :string}
-                         :password         {:type :string}
+                 :value {:username         {:type :string
+                                            :validators [[:required {:message "Введите логин"}]]}
+                         :password         {:type :string
+                                            :validators [[:required {:message "Введите пароль"}]]}
                          :password-confirm {:type :string}}}})
 
 (def authorization ::authorization)
@@ -46,10 +48,10 @@
 (reframe/reg-event-fx
  ::create-account
  (fn [_ [_ {:keys [data params success]}]]
-   {:js/fetch {:uri     "/person"
-               :method  "POST"
-               :body    data
-               :success success}}))
+   {:dispatch [:js/fetch {:params {:uri     "/person"
+                                   :method  "POST"
+                                   :body    data
+                                   :success success}}]}))
 
 (reframe/reg-event-fx
  ::success-create

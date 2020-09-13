@@ -18,3 +18,8 @@
                    (rf/dispatch [(:event e) (merge (:params e) {:data (edn/read-string response)})])))))))))
 
 (rf/reg-fx :js/fetch json-fetch)
+
+(rf/reg-event-fx
+ :js/fetch
+ (fn [_ [_ {:keys [params]}]]
+   {:js/fetch params}))

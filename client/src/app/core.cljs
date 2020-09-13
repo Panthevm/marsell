@@ -21,7 +21,8 @@
    {:db (assoc db :routes routes/routes)
     ::routing/start {}}))
 
-(defn current-page []
+(defn current-page
+  []
   (let [route (rf/subscribe [::routing/current-route])]
     (fn []
       (let [page (->> @route :id (get @page/pages))]
@@ -29,7 +30,7 @@
          [c-flesh/component]
          [:div.bg-purple-900.pb-10.min-h-screen
           [c-navbar/component]
-          (when page [page])]])))o
+          (when page [page])]]))))
 
 
 (defn ^:export mount []

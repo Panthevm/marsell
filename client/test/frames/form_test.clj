@@ -10,7 +10,8 @@
 (def schema
   {:form-path   [:form ::schema1]
    :form-schema {:type  :form
-                 :value {:birth-date {:type :string}
+                 :value {:birth-date {:type :string
+                                      :validators {:required {:message "Required"}}}
                          :period     {:type  :form
                                       :value {:start {:type :string}}}
                          :name       {:type  :collection
@@ -32,12 +33,13 @@
   (reset! db/app-db nil)
   (testing "events"
     (testing "eval"
+
       (testing "with data"
         (reframe/dispatch [::sut/init {:params schema}])
         (matcho/match
-         (sut/export @(reframe/subscribe [::sut/form {:params schema}]) 
-                   )
+         (sut/export @(reframe/subscribe [::sut/form {:params schema}]))
          (:data schema)))
+
       (testing "without data"
         (reframe/dispatch [::sut/init {:params (dissoc schema :data)}])
         (matcho/match
@@ -94,4 +96,13 @@
         (matcho/match
          (sut/export @(reframe/subscribe [::sut/form {:params schema}]))
          (-> (:data schema)
-             (update :name rest)))))))
+             (update :name rest)))))
+
+    (testing "validators"
+      (reframe/dispatch [::sut/init {:params (dissoc schema :data)}])
+      (matcho/match
+       (sut/export @(reframe/subscribe [::sut/form {:params schema}]))
+       {:name [] :address [] :period {:start nil}})
+
+
+      )))

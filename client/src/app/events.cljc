@@ -9,7 +9,7 @@
 (refreme/reg-event-fx
  ::form-eval
  (fn [{db :db} [_ {:keys [params success]}]]
-   (let [data (->> params :form-path (get-in db) form/eval)]
+   (let [data (->> params :form-path (get-in db) form/export)]
      {:dispatch (event success data)})))
 
 

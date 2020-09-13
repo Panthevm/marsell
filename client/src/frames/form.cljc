@@ -49,6 +49,15 @@
   [node]
   (:value node))
 
+(defmulti validation
+  (fn [value [validation-name params]]
+    validation-name))
+
+(defmethod validation :required
+  [value [validation-name params]]
+  (when (empty? value)
+    (:message params)))
+
 (defn node-path
   [form-path path]
   (vec (concat form-path
@@ -80,9 +89,12 @@
 (reframe/reg-event-db
  ::set-value
  (fn [db [_ {:keys [params]}]]
-   (assoc-in db (conj (node-path (:form-path params) (:path params))
-                      :value)
-             (:value params))))
+   (let [path       (node-path (:form-path params) (:path params))
+         validators (get-in db (conj path :validators))]
+     (update-in db path assoc
+                :value  (:value params)
+                :errors (keep (partial validation (:value params))
+                              validators)))))
 
 (reframe/reg-sub
  ::node
