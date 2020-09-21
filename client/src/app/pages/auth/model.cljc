@@ -59,3 +59,4 @@
    {:dispatch [::frames-flash/flash {:params {:status :success
                                               :message (str (:username data) ", вы успешно зарегистрировались")}}]}))
 
+

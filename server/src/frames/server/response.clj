@@ -1,11 +1,12 @@
 (ns frames.server.response
   (:import [java.io ByteArrayOutputStream]))
 
-(def ^:const empty-line
+(def empty-line
   "\r\n")
 
-(def ^:const response-reasons
+(def response-reasons
   {200 "OK"
+   404 "Not Found"
    400 "Bad Request"})
 
 (defn- make-status
@@ -22,16 +23,15 @@
      "" headers)))
 
 (defn make
-  [{:keys [status headers body]}]
+  [{:keys [status headers body]} writer]
   (letfn [(append [out data]
             (when data
               (let [bs (.getBytes data)]
                 (.write out bs 0 (alength bs)))))]
-    (let [out  (ByteArrayOutputStream.)
-          body (some-> body str)]
-      (append out (make-status status))
-      (append out empty-line)
-      (append out (make-headers headers body))
-      (append out empty-line)
-      (append out body)
-      (.toByteArray out))))
+    (let [body (some-> body str)]
+      (append writer (make-status status))
+      (append writer empty-line)
+      (append writer (make-headers headers body))
+      (append writer empty-line)
+      (append writer body)
+      (.flush writer))))

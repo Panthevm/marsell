@@ -6,9 +6,14 @@
             [clojure.test          :refer :all])
   (:import  [java.net Socket]))
 
+(defn write
+  [response writer]
+  (.write writer response)
+  (.flush writer))
+
 (defn write-to
   [socket message]
-  (sut/write-response message (io/writer socket)))
+  (write message (io/writer socket)))
 
 (defn read-lines
   [socket]

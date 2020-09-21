@@ -1,30 +1,19 @@
 (ns frames.server.core
   (:require [clojure.java.io        :as io]
             [clojure.tools.logging  :as logg]
+            [clojure.core.async     :as async]
             [frames.server.request  :as request]
             [frames.server.response :as response])
-  (:import  [java.net ServerSocket]))
-
-(defn- read-request
-  [handler reader]
-  (->> reader
-       (request/parse)
-       (handler)
-       (response/make)))
-
-(defn write-response
-  [response writer]
-  (.write writer response)
-  (.flush writer))
+  (:import  [java.net Socket ServerSocket SocketException]))
 
 (defn- handle-client
-  [handler server-socket]
-  (with-open [socket (.accept server-socket)
-              reader (io/reader        socket)
+  [handler socket]
+  (with-open [reader (io/reader        socket)
               writer (io/output-stream socket)]
-    (-> handler
-        (read-request   reader)
-        (write-response writer))))
+    (-> 
+     (request/parse reader)
+     (handler)
+     (response/make writer))))
 
 (defn run
   [handler options]
@@ -32,7 +21,13 @@
     (logg/info "Server started on port" (:port options))
     (future
       (loop []
-        (handle-client handler server-socket)
+        (let [socket (.accept server-socket)]
+          (async/thread
+            (try (handle-client handler socket)
+                 (catch SocketException e
+                   (logg/error e)
+                   (.close socket)))))
         (recur))
       (.close server-socket))
+    
     server-socket))

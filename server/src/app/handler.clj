@@ -11,5 +11,5 @@
 (def match-routing
   (handler/routing routing
                    {:not-found (fn [request]
-                                 {:status 400
+                                 {:status 404
                                   :body {:message (str  "Resource " (:uri request) " not found")}})}))

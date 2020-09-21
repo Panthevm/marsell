@@ -14,7 +14,6 @@
             [app.components.navbar.core     :as c-navbar]
             [app.components.breadcrumb.core :as c-breadcrumb]))
 
-
 (rf/reg-event-fx
  ::initialize
  (fn [{db :db} _]
