@@ -5,38 +5,29 @@
 
 (def routing
   (sut/routing
-   {"resource" {:GET    {:handler (fn [request] (:method request))}
-                :POST   {:handler (fn [request] (:method request))}
-                :DELETE {:handler (fn [request] (:method request))}
-                "child" {:GET     {:handler (fn [request] "child")}}
-                'var    {:GET     {:handler (fn [request] (:params request))}
-                         "nested" {:GET {:handler (fn [request] "nested")}
-                                   'id  {:GET {:handler (fn [request] (:params request))}}}}}}
+   {"resource" {:GET    {:handler (fn [{request :request}] (:method request))}
+                :POST   {:handler (fn [{request :request}] (:method request))}
+                :DELETE {:handler (fn [{request :request}] (:method request))}
+                "child" {:GET     {:handler (fn [_] "child")}}
+                'var    {:GET     {:handler (fn [{request :request}] (:params request))}
+                         "nested" {:GET {:handler (fn [_] "nested")}
+                                   'id  {:GET {:handler (fn [{request :request}] (:params request))}}}}}}
    {:not-found (fn [request]
                  {:status 404
                   :body {:message (str  "Resource " (:uri request) " not found")}})}))
 
-(deftest routing-core-test
-
+(deftest core
   (testing "methods"
-    (matcho/match (routing {:uri "/resource" :method :GET})     :GET)
-    (matcho/match (routing {:uri "/resource" :method :POST})    :POST)
-    (matcho/match (routing {:uri "/resource" :method :DELETE})  :DELETE)
-    (matcho/match (routing {:uri "/resource" :method :OPTIONS})
-                  {:GET    {:handler fn?}
-                   :POST   {:handler fn?}
-                   :DELETE {:handler fn?}
-                   "child" {:GET     {:handler fn?}}
-                   'var    {:GET     {:handler fn?}
-                            "nested" {:GET {:handler fn?}
-                                      'id  {:GET {:handler fn?}}}}}))
+    (matcho/match (routing {:request {:uri "/resource" :method :GET}})     :GET)
+    (matcho/match (routing {:request {:uri "/resource" :method :POST}})    :POST)
+    (matcho/match (routing {:request {:uri "/resource" :method :DELETE}})  :DELETE))
 
   (testing "params"
-    (matcho/match (routing {:uri "/resource/child"    :method :GET})   "child")
-    (matcho/match (routing {:uri "/resource/1"        :method :GET})   {:var "1"})
-    (matcho/match (routing {:uri "/resource/1/nested" :method :GET})   "nested")
-    (matcho/match (routing {:uri "/resource/1/nested/2" :method :GET}) {:var "1" :id "2"}))
+    (matcho/match (routing {:request {:uri "/resource/child"    :method :GET}})   "child")
+    (matcho/match (routing {:request {:uri "/resource/1"        :method :GET}})   {:var "1"})
+    (matcho/match (routing {:request {:uri "/resource/1/nested" :method :GET}})   "nested")
+    (matcho/match (routing {:request {:uri "/resource/1/nested/2" :method :GET}}) {:var "1" :id "2"}))
 
   (testing "not-found"
-    (matcho/match (routing {:uri "/foo"    :method :GET}) {:status 404 :body {:message "Resource /foo not found"}})
-    (matcho/match (routing {:uri "/foo/bar":method :GET}) {:status 404 :body {:message "Resource /foo/bar not found"}})))
+    (matcho/match (routing {:request {:uri "/foo"    :method :GET}}) {:status 404 :body {:message "Resource /foo not found"}})
+    (matcho/match (routing {:request {:uri "/foo/bar":method :GET}}) {:status 404 :body {:message "Resource /foo/bar not found"}})))
