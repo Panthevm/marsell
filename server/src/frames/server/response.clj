@@ -1,5 +1,5 @@
 (ns frames.server.response
-  (:import [java.io ByteArrayOutputStream]))
+  (:require [clojure.tools.logging :as logg]))
 
 (def empty-line
   "\r\n")
@@ -19,11 +19,12 @@
                   body (assoc "Content-Length" (alength (.getBytes body))))]
     (reduce
      (fn [acc [k v]]
-       (str acc k ": " v empty-line))
+       (str acc (name k) ": " v empty-line))
      "" headers)))
 
 (defn make
-  [{:keys [status headers body]} writer]
+  [{:keys [status headers body] :as response} writer]
+  (logg/info "Response:" response)
   (letfn [(append [out data]
             (when data
               (let [bs (.getBytes data)]

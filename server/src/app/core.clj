@@ -1,11 +1,11 @@
 (ns app.core
+  (:gen-class)
   (:require [frames.server.core :as server]
             [frames.pool.core   :as pool]
             [app.migration      :as migration]
             [app.middleware     :as middleware]
             [app.handler        :as handler]
-            [app.manifest       :as manifest])
-  (:gen-class))
+            [app.manifest       :as manifest]))
 
 (defonce datasource
   (delay (pool/create-pool (-> manifest/manifest :database :datasource))))

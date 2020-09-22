@@ -4,8 +4,9 @@ ubuild:
 utest:
 	cd client && clj -A:test:kaocha
 ##SERVER
+
 sbuild:
-  cd server && clj -A:uberjar
+        cd server && clj -A:uberjar
 sgraph:
 	cd server && clj -A:graph -o deps.png --size
 sjar:

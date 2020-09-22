@@ -2,39 +2,27 @@
   (:require [clojure.string        :as str]
             [clojure.tools.logging :as logg]))
 
-(defn- read-type
+(defn- read-headers
   [reader]
-  (str/split (.readLine reader) #" " 3))
-
-(defn- read-uri
-  [uri]
-  (str/split uri #"\?" 2))
-
-(defn- read-header
-  [reader]
-  (let [headers (take-while not-empty (repeatedly #(.readLine reader)))]
+  (let [headers (take-while not-empty (repeatedly #(re-seq #"[^: ]+" (.readLine reader))))]
     (reduce
-     (fn [acc header]
-       (let [[type value] (str/split header #": " 2)]
-         (assoc acc type value)))
+     (fn [acc [type value]]
+       (assoc acc (keyword type) value))
      {} headers)))
 
 (defn- read-body
-  [reader headers]
-  (letfn [(read-body [content-length]
-            (let [length (read-string content-length)
-                  buffer (char-array  length)]
-              (.read reader buffer 0 length)
-              (String. buffer)))]
-    (when-let [content-length (get headers "Content-Length")]
-      (read-body content-length))))
+  [content-length reader]
+  (let [length (Integer. content-length)
+        buffer (char-array  length)]
+    (.read reader buffer 0 length)
+    (String. buffer)))
 
 (defn parse
   [reader]
-  (let [[method uri version] (read-type   reader)
-        [uri query-string]   (read-uri    uri)
-        headers              (read-header reader)
-        body                 (read-body   reader headers)]
+  (let [[method uri version] (re-seq #"\w+"   (.readLine reader))
+        [uri query-string]   (re-seq #"[^?]+" uri)
+        headers              (read-headers reader)
+        body                 (some-> (:Content-Length headers) (read-body reader))]
     (logg/info "Request:" method uri query-string headers body)
     {:method       (keyword method)
      :version      version
