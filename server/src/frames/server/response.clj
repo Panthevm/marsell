@@ -5,6 +5,7 @@
 
 (def response-reasons
   {200 "OK"
+   201 "Created"
    404 "Not Found"
    400 "Bad Request"})
 
@@ -24,10 +25,13 @@
 
 (defn make
   [{:keys [status headers body] :as response} writer]
-  (.write writer
-          (.getBytes (str (make-status status)
-                          empty-line
-                          (make-headers headers body)
-                          empty-line
-                          body)))
-  (.flush writer))
+  (let [body (some-> body str)
+        bytes-reponse
+        (.getBytes
+         (str (make-status status)
+              empty-line
+              (make-headers headers body)
+              empty-line
+              (str body)))]
+    (.write writer bytes-reponse 0 (alength bytes-reponse))
+    (.flush writer)))
