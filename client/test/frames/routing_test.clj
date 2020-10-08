@@ -32,13 +32,13 @@
   (reframe/dispatch [::sut/init {:params {:routes routes}}])
 
   (reframe/dispatch [::sut/redirect {:params {:location "#/"}}])
-  (matcho/match (::page-default @db/app-db )
+  (matcho/match (::page-default @db/app-db)
                 {:params {:id     ::page-default
                           :phase  :init
                           :params {:search nil}}})
 
   (reframe/dispatch [::sut/redirect {:params {:location "#/bar?init=foo"}}])
-  (matcho/match (::page-default @db/app-db )
+  (matcho/match (::page-default @db/app-db)
                 {:params {:id     ::page-default
                           :phase  :deinit
                           :params {:search nil}}})
@@ -63,5 +63,4 @@
                           :phase  :init
                           :params {:bat    "123"
                                    :plugh  "456"
-                                   :search {:init "fo"}},}})
-  )
+                                   :search {:init "fo"}}}}))

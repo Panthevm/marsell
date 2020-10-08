@@ -4,7 +4,7 @@
             [frames.server.request :as request]
             [matcho.core           :as matcho]
             [clojure.test          :refer :all])
-  (:import  [java.net Socket]))
+  (:import  [java.net Socket InetAddress]))
 
 (defn write
   [response writer]
@@ -38,13 +38,13 @@
                       ["HTTP/1.1 200 OK"
                        "Header: Test"
                        "Header2: Test2"
-                       "Content-Length: 123"
+                       "Content-Length: 122"
                        ""
                        (str
                         {:method       :GET
                          :version      "HTTP/1.1"
                          :uri          "/get"
-                         :headers      {"Host" "localhost"}
+                         :headers      {:Host "localhost"}
                          :query-string "foo=bar&baz=zaz"
                          :body         nil})])))
 
@@ -59,14 +59,14 @@
                       ["HTTP/1.1 200 OK"
                        "Header: Test"
                        "Header2: Test2"
-                       "Content-Length: 136"
+                       "Content-Length: 134"
                        ""
                        (str
                         {:method       :POST
                          :version      "HTTP/1.1"
                          :uri          "/post"
-                         :headers      {"Host"           "localhost"
-                                        "Content-Length" "4"}
+                         :headers      {:Host           "localhost"
+                                        :Content-Length "4"}
                          :query-string nil
                          :body         "body"})])))
 
@@ -79,13 +79,13 @@
                       ["HTTP/1.1 200 OK"
                        "Header: Test"
                        "Header2: Test2"
-                       "Content-Length: 117"
+                       "Content-Length: 116"
                        ""
                        (str
                         {:method       :OPTIONS
                          :version      "HTTP/1.1"
                          :uri          "/options"
-                         :headers      {"Host" "localhost"}
+                         :headers      {:Host "localhost"}
                          :query-string nil
                          :body         nil})])))))
 

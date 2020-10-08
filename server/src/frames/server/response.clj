@@ -1,5 +1,4 @@
-(ns frames.server.response
-  (:require [clojure.tools.logging :as logg]))
+(ns frames.server.response)
 
 (def empty-line
   "\r\n")
@@ -15,8 +14,9 @@
 
 (defn- make-headers
   [headers body]
-  (let [headers (cond-> headers
-                  body (assoc "Content-Length" (alength (.getBytes body))))]
+  (let [headers
+        (cond-> headers
+          body (assoc :Content-Length (count body)))]
     (reduce
      (fn [acc [k v]]
        (str acc (name k) ": " v empty-line))
@@ -24,15 +24,10 @@
 
 (defn make
   [{:keys [status headers body] :as response} writer]
-  (logg/info "Response:" response)
-  (letfn [(append [out data]
-            (when data
-              (let [bs (.getBytes data)]
-                (.write out bs 0 (alength bs)))))]
-    (let [body (some-> body str)]
-      (append writer (make-status status))
-      (append writer empty-line)
-      (append writer (make-headers headers body))
-      (append writer empty-line)
-      (append writer body)
-      (.flush writer))))
+  (.write writer
+          (.getBytes (str (make-status status)
+                          empty-line
+                          (make-headers headers body)
+                          empty-line
+                          body)))
+  (.flush writer))

@@ -1,12 +1,11 @@
 (ns app.handler
   (:require [frames.routing.core :as handler]
-
             [app.action.person   :as person]))
 
 (def routing
   {"ping"   {:GET  {:handler (fn [request]
                                {:status 200 :body (str request)})}}
-   "person" {:POST {:handler person/create}}})
+   "person" {:POST {:handler person/registration}}})
 
 (def match-routing
   (handler/routing routing
