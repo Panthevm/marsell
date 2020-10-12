@@ -1,14 +1,20 @@
-(ns frames.server.request)
+(ns frames.server.request
+  (:require [clojure.string :as string]))
 
-(defn- read-headers
+(def h "Date: Fri, 09 Oct 2020 14:58:18 GMT")
+
+(re-seq #"([\w-]+): (.*)" h)
+
+(defn read-headers
   [reader]
-  (let [headers (take-while not-empty (repeatedly #(re-seq #"[^: ]+" (.readLine reader))))]
+  (let [headers (take-while not-empty
+                            (repeatedly #(re-seq #"([\w-]+): (.*)" (.readLine reader))))]
     (reduce
-     (fn [acc [type value]]
+     (fn [acc [[_ type value]]]
        (assoc acc (keyword type) value))
      {} headers)))
 
-(defn- read-body
+(defn read-body
   [content-length reader]
   (let [length (Integer. content-length)
         buffer (char-array length)]

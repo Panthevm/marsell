@@ -1,91 +1,97 @@
 (ns frames.server.core-test
   (:require [frames.server.core    :as sut]
+            [frames.client.core    :as client]
             [clojure.java.io       :as io]
             [frames.server.request :as request]
             [matcho.core           :as matcho]
+            [clojure.edn           :as edn]
             [clojure.test          :refer :all])
   (:import  [java.net Socket InetAddress]))
 
-(defn write
-  [response writer]
-  (.write writer response)
-  (.flush writer))
+(deftest core 
 
-(defn write-to
-  [socket message]
-  (write message (io/writer socket)))
+  ;; 
+  ;; Handler 
+  ;; 
+  ;; The `request` can contain the following keys:
+  ;;   * :method       - Method type          | (:GET :POST :DELETE :OPTIONS ...)
+  ;;   * :uri          - Relative URI         | "/relative-uri"
+  ;;   * :version      - Version http request | "HTTP/1.1"
+  ;;     :query-string - Query string         | "foo=bar&baz=zaz"
+  ;;     :body         - Request body         | {:foo "bar"}
 
-(defn read-lines
-  [socket]
-  (line-seq (io/reader socket)))
+  (defn handler
+    [request]
+    {:status  200
+     :headers {:Header "value"}
+     :body    (str request)})
 
-(deftest server-core-test
-  (with-open [server-socket (sut/run (fn [request]
-                                       (prn request)
-                                       {:status  200
-                                        :headers {"Header" "Test"
-                                                  "Header2" "Test2"}
-                                        :body    (str request)})
-                              {:port 3000})]
+  ;;
+  ;; Server
+  ;;
+  ;; Runs `handler` with the given `options`.
+  ;; Options can contain the following keys:
+  ;;   * :port - the port listening for requests
+  ;;
+  ;; 
+
+  (with-open [server (sut/run handler {:port 3000})]
 
     (testing "GET"
-      (with-open [socket (Socket. "localhost" (.getLocalPort server-socket))]
-        (write-to socket
-                  (str "GET /get?foo=bar&baz=zaz HTTP/1.1\n"
-                       "Host: localhost\n"
-                       "\n"))
-        (matcho/match (read-lines socket)
-                      ["HTTP/1.1 200 OK"
-                       "Header: Test"
-                       "Header2: Test2"
-                       "Content-Length: 122"
-                       ""
-                       (str
-                        {:method       :GET
-                         :version      "HTTP/1.1"
-                         :uri          "/get"
-                         :headers      {:Host "localhost"}
-                         :query-string "foo=bar&baz=zaz"
-                         :body         nil})])))
+      (def get-response
+        (client/request
+         {:method "GET"
+          :url    "localhost/path?param=param-value"
+          :port   3000}))
+
+      (testing "status"
+        (-> (:status get-response)
+            (matcho/match "200")))
+
+      (testing "headers"
+        (-> (:headers get-response)
+            (matcho/match
+             {:Header         "value"
+              :Content-Length "107"})))
+
+      (testing "body"
+        (-> (:body get-response)
+            (matcho/match
+             (str
+              {:method       :GET
+               :version      "HTTP/1.1"
+               :uri          "path"
+               :headers      {}
+               :query-string "param=param-value"
+               :body         nil})))))
 
     (testing "POST"
-      (with-open [socket (Socket. "localhost" (.getLocalPort server-socket))]
-        (write-to socket (str "POST /post HTTP/1.1\n"
-                              "Host: localhost\n"
-                              "Content-Length: 4\n"
-                              "\n"
-                              "body"))
-        (matcho/match (read-lines socket)
-                      ["HTTP/1.1 200 OK"
-                       "Header: Test"
-                       "Header2: Test2"
-                       "Content-Length: 134"
-                       ""
-                       (str
-                        {:method       :POST
-                         :version      "HTTP/1.1"
-                         :uri          "/post"
-                         :headers      {:Host           "localhost"
-                                        :Content-Length "4"}
-                         :query-string nil
-                         :body         "body"})])))
+      (def post-response
+        (client/request
+         {:method  "POST"
+          :url     "localhost/path?param-post=post"
+          :port    3000
+          :headers {:foo "bar"}
+          :body    {:baz "zaz"}}))
 
-    (testing "OPTIONS"
-      (with-open [socket (Socket. "localhost" (.getLocalPort server-socket))]
-        (write-to socket (str "OPTIONS /options HTTP/1.1\n"
-                              "Host: localhost\n"
-                              "\n"))
-        (matcho/match (read-lines socket)
-                      ["HTTP/1.1 200 OK"
-                       "Header: Test"
-                       "Header2: Test2"
-                       "Content-Length: 116"
-                       ""
-                       (str
-                        {:method       :OPTIONS
-                         :version      "HTTP/1.1"
-                         :uri          "/options"
-                         :headers      {:Host "localhost"}
-                         :query-string nil
-                         :body         nil})])))))
+      (testing "status"
+        (-> (:status post-response)
+            (matcho/match "200")))
 
+      (testing "headers"
+        (-> (:headers post-response)
+            (matcho/match
+             {:Header         "value"
+              :Content-Length "151"})))
+
+      (testing "body"
+        (-> (:body post-response)
+            (matcho/match
+             (str
+              {:method       :POST
+               :version      "HTTP/1.1"
+               :uri          "path"
+               :headers      {:foo            "bar"
+                              :Content-Length "12"}
+               :query-string "param-post=post"
+               :body         (str {:baz "zaz"})})))))))

@@ -1,8 +1,10 @@
 (ns frames.server.core
-  (:require [clojure.java.io        :as io]
-            [frames.server.request  :as request]
-            [frames.server.response :as response])
-  (:import  [java.net ServerSocket SocketException]))
+  (:require
+   [clojure.java.io        :as io]
+   [frames.server.request  :as request]
+   [frames.server.response :as response])
+  (:import
+   [java.net ServerSocket SocketException]))
 
 (defn- handle-client
   [handler socket]

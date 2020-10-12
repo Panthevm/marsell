@@ -13,7 +13,7 @@
   [status]
   (str "HTTP/1.1 " status " " (get response-reasons status "Not Found")))
 
-(defn- make-headers
+(defn make-headers
   [headers body]
   (let [headers
         (cond-> headers
